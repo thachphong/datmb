@@ -17,14 +17,14 @@
 							<div class="col-md-2 col-sm-2 col-xs-12">
 								<label class="control control-radio">
 							        BĐS Bán
-							        <input type="radio" name="m_type_id" checked="checked" />
+							        <input type="radio" name="m_type_id" checked="checked" value="1" class="m_type_id" />
 							        <div class="control_indicator"></div>
 							    </label>
 							</div>
 							<div class="col-md-2 col-sm-2 col-xs-12">							
 								<label class="control control-radio">
 							        BĐS Cho thuê
-							        <input type="radio" name="m_type_id" />
+							        <input type="radio" name="m_type_id" value="2" class="m_type_id"/>
 							        <div class="control_indicator"></div>
 							    </label>
 							</div>
@@ -33,7 +33,7 @@
 							<label class="col-md-2 col-sm-2 col-xs-12 title_col">Loại nhà đất <span class="lab_red">(*)</span>:</label>
 							<div class="col-md-4 col-sm-4 col-xs-12">
 								<label class="select_icon">
-									<select>
+									<select name="ctg_id" id="ctg_id">
 										<option>--Chọn loại bất động sản--</option>
 									</select>
 								</label>
@@ -76,7 +76,7 @@
 								</label>
 							</div>
 						</div>
-						<div class="row row-margin-bottom">
+						<!-- <div class="row row-margin-bottom">
 							<label class="col-md-2 col-sm-2 col-xs-12 title_col"></label>
 							<div class="col-md-4 col-sm-4 col-xs-12">
 								<label class="select_icon">
@@ -85,7 +85,7 @@
 									</select>
 								</label>
 							</div>							
-						</div>
+						</div> -->
 						<div class="row row-margin-bottom">
 							<label class="col-md-2 col-sm-2 col-xs-12 title_col">Giá</label>
 							<div class="col-md-4 col-sm-4 col-xs-12">
@@ -175,8 +175,38 @@
 						</div>
 						<div class="row row-margin-bottom">
 							<label class="col-md-2 col-sm-2 col-xs-12 title_col">Cập nhật hình ảnh</label>
-							<div class="col-md-9 col-sm-9 col-xs-12">
-								<button class="btn_upload"><i class="fa fa-cloud-upload"></i><br/>Upload Ảnh</button>
+							<div class="col-md-10 col-sm-10 col-xs-12">
+								<!-- <div class="col-md-2 col-sm-2 col-xs-4"> -->
+								<div class="div_img">									
+									<img src="{{url.get('images/post/1777196_81_z.jpg')}}">
+									<a href="javascript:void(0)" class="delete_img">X</a>
+								</div>
+								<div class="div_img">									
+									<img src="{{url.get('images/post/1777196_81_z.jpg')}}">
+									<a href="javascript:void(0)" class="delete_img">X</a>
+								</div>
+								<div class="div_img">									
+									<img src="{{url.get('images/post/1777196_81_z.jpg')}}">
+									<a href="javascript:void(0)" class="delete_img">X</a>
+								</div>
+								<div class="div_img">									
+									<img src="{{url.get('images/post/1777196_81_z.jpg')}}">
+									<a href="javascript:void(0)" class="delete_img">X</a>
+								</div>
+								<div class="div_img">									
+									<img src="{{url.get('images/post/1777196_81_z.jpg')}}">
+									<a href="javascript:void(0)" class="delete_img">X</a>
+								</div>
+								<div class="div_img">									
+									<img src="{{url.get('images/post/1777196_81_z.jpg')}}">
+									<a href="javascript:void(0)" class="delete_img">X</a>
+								</div>
+								<!-- </div> -->
+								<!-- <div class="col-md-2 col-sm-2 col-xs-4"> -->
+								<div class="div_img">
+									<button class="btn_upload" id="btn_upload"><i class="fa fa-cloud-upload"></i><br/>Upload Ảnh</button>
+									<input type="file" name="" style="display:none" id="upload_file">
+								</div>
 							</div>												
 						</div>
 						<hr/>
@@ -251,11 +281,11 @@
 						<div class="row row-margin-bottom">
 							<label class="col-md-2 col-sm-2 col-xs-12 title_col">Thời gian đăng từ :</label>
 							<div class="col-md-3 col-sm-3 col-xs-12">
-								<input type="" name="">
+								<input type="" name="" class="datetimepicker">
 							</div>	
 							<label class="col-md-1 col-sm-1 col-xs-12 title_col">Đến :</label>
 							<div class="col-md-3 col-sm-3 col-xs-12">
-								<input type="" name="">
+								<input type="" name="" class="datetimepicker">
 							</div>						
 						</div>
 						<div class="row row-margin-bottom" style="margin-top:20px">
@@ -271,11 +301,18 @@
 		</div>
 	</div>
 </div>
+{{ stylesheet_link('template1/css/jquery.datetimepicker.css') }}
+{{ javascript_include('template1/js/jquery.datetimepicker.full.min.js') }}
 <script type="text/javascript">
 	$(document).ready(function() {
 		var district_list = Array();
 		var ward_list = Array();
 		var street_list = Array();
+		var category_list = Array();
+		{%for item in categorys%}
+			category_list.push(['{{item.ctg_id}}',"{{item.ctg_name}}",'{{item.m_type_id}}']);
+		{%endfor%}
+
 		{%for item in districts%}
 			district_list.push(['{{item.m_district_id}}',"{{item.m_district_name}}",'{{item.m_provin_id}}']);
 		{%endfor%}
@@ -286,6 +323,14 @@
 		{%for item in streets%}
 			street_list.push(['{{item.m_street_id}}',"{{item.m_street_name}}",'{{item.m_ward_id}}']);
 		{%endfor%}
+
+		$('.datetimepicker').datetimepicker({
+          //format:'Y/m/d H:i',
+          format:'d/m/Y',
+          inline:false,
+          timepicker:false,
+          lang:'ru'
+    	});
 		//console.log(district_list);
 		$(document).off('change','#m_provin_id');
 		$(document).on('change','#m_provin_id',function(){
@@ -326,6 +371,63 @@
 			$('#m_street_id').empty();
 			$('#m_street_id').append(option);
 		});
-		
+		change_m_type_id($("input[name='m_type_id']:checked").val());
+		$(document).off('change','.m_type_id');
+		$(document).on('change','.m_type_id',function(){
+			var val = $("input[name='m_type_id']:checked").val();
+			change_m_type_id(val);
+		});
+		function change_m_type_id(val){
+			var option = '<option>--Chọn loại bất động sản--</option>';
+			$.each(category_list,function(key,item){
+				//console.log(item);
+				if(val == item[2]){
+					option +='<option value="'+item[0]+'">'+item[1]+'</option>';
+				}
+			});
+			$('#ctg_id').empty();
+			$('#ctg_id').append(option);
+		}
+		//upload file
+		$(document).off('click','#btn_upload'); 
+        $(document).on('click','#btn_upload',function(event){
+        	$('#upload_file').click();
+        });
+		$(document).off('change','#upload_file'); 
+        $(document).on('change','#upload_file',function(event){
+        	
+        	var file_data=$(this).prop("files");
+        	//console.log(file_data);	
+        	if(file_data.length == 0){
+        		return;
+        	}
+        	var form_data=new FormData(this);
+        	for(var i=0;i<file_data.length;i++){
+        		form_data.append(i,file_data[i]);
+        	}        	
+            
+            var base_url= "{{url.get('')}}";
+            //console.log(form_data);	
+        	Pho_upload("{{url.get('posts/upload')}}" ,form_data,function(datas){
+				if(datas.status =="OK"){
+					//console.log(datas);					
+                   // var cnt_add = $("#list_file").find('.add_img').length;  			
+					for(var i=0;i<datas.link.length;i++){
+		        		//form_data.append(i,file_data[i]);
+		        		cnt_add++;
+		        		var html_tr= '<tr id="tr_add_'+cnt_add+'"><td><img class="img-rounded" height="60" src="'+datas.link[i]+'" id="img_add_'+cnt_add+'"></td><td><a class="btn btn-danger btn-xs btn_del_img" id="del_add_'+cnt_add+'">Xóa hình</a></td><td><label><input type="radio" name="chk" value="1" id="radio_add_'+cnt_add+'">Chọn làm ảnh đại diện </label><input type="hidden" name="img_add['+cnt_add+']" value="'+datas.link[i]+'"></td></tr>';
+		        		$("#list_file").append(html_tr);		        		
+		        	}
+		        	if(get_avata_id()==""){
+		        		$("#radio_add_1").prop('checked',true);	
+		        	}
+					//var file_name = datas.link.replace(base_url,"");	
+					//$('#img_path').val(file_name);				
+				}else{
+					Pho_message_box_error("Lỗi",datas.msg);
+				}
+                
+            });
+        });
 	});
 </script>
