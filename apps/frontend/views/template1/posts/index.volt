@@ -11,7 +11,11 @@
 					<div>
 						<h3>Thông tin cơ bản</h3>
 					</div>
-					<form>
+					<form enctype="multipart/form-data" id="from_post">
+						<input type="hidden" name="folder_tmp" id="folder_tmp"  value="{{folder_tmp}}">
+						<div class="row row-margin-bottom lab_invisible" id="lab_message_error" style="text-align:center">
+							<label class="lab_red">Có một số thông tin chưa hợp lệ, vui lòng nhập lại !</label>
+						</div>
 						<div class="row row-margin-bottom">
 							<label class="col-md-2 col-sm-2 col-xs-12 title_col">Loại tin <span class="lab_red">(*)</span>:</label>
 							<div class="col-md-2 col-sm-2 col-xs-12">
@@ -33,30 +37,33 @@
 							<label class="col-md-2 col-sm-2 col-xs-12 title_col">Loại nhà đất <span class="lab_red">(*)</span>:</label>
 							<div class="col-md-4 col-sm-4 col-xs-12">
 								<label class="select_icon">
-									<select name="ctg_id" id="ctg_id">
-										<option>--Chọn loại bất động sản--</option>
+									<select name="ctg_id" id="ctg_id" required>
+										<option value="">--Chọn loại bất động sản--</option>
 									</select>
 								</label>
+								<label class="lab_red lab_invisible" id="ctg_id_error">Bạn cần chọn loại nhà đất !</label>
 							</div>
 						</div>
 						<div class="row row-margin-bottom">
 							<label class="col-md-2 col-sm-2 col-xs-12 title_col">Vị trí <span class="lab_red">(*)</span>:</label>
 							<div class="col-md-4 col-sm-4 col-xs-12">
 								<label class="select_icon">
-									<select id="m_provin_id" name="m_provin_id">
+									<select id="m_provin_id" name="m_provin_id" required>
 										<option value="">--Chọn Tỉnh/Thành phố--</option>
 										{%for item in provincials%}
 											<option value="{{item.m_provin_id}}">{{item.m_provin_name}}</option>
 										{%endfor%}
 									</select>
 								</label>
+								<label class="lab_red lab_invisible" id="m_provin_id_error">Bạn cần chọn tỉnh/thành phố !</label>
 							</div>
 							<div class="col-md-4 col-sm-4 col-xs-12">
 								<label class="select_icon">
-									<select id="m_district_id" name="m_district_id">
-										<option>--Chọn Quận/HUyện--</option>
+									<select id="m_district_id" name="m_district_id" required>
+										<option value="">--Chọn Quận/HUyện--</option>
 									</select>
 								</label>
+								<label class="lab_red lab_invisible" id="m_district_id_error">Bạn cần chọn quận/huyện !</label>
 							</div>
 						</div>
 						<div class="row row-margin-bottom">
@@ -64,14 +71,14 @@
 							<div class="col-md-4 col-sm-4 col-xs-12">
 								<label class="select_icon">
 									<select name="m_ward_id" id="m_ward_id">
-										<option>--Chọn Phường/Xã--</option>
+										<option value="">--Chọn Phường/Xã--</option>
 									</select>
 								</label>
 							</div>
 							<div class="col-md-4 col-sm-4 col-xs-12">
 								<label class="select_icon">
 									<select class="m_street_id" name="m_street_id">
-										<option>--Chọn Đường/Phố--</option>
+										<option value="">--Chọn Đường/Phố--</option>
 									</select>
 								</label>
 							</div>
@@ -95,7 +102,7 @@
 							<div class="col-md-3 col-sm-3 col-xs-12">
 								<label class="select_icon">
 									<select name="m_unit_id">
-										<option>--Chọn đơn vị--</option>
+										<option value="">--Chọn đơn vị--</option>
 										{%for item in units%}
 											<option value="{{item.m_unit_id}}">{{item.m_unit_name}}</option>
 										{%endfor%}
@@ -113,7 +120,8 @@
 						<div class="row row-margin-bottom">
 							<label class="col-md-2 col-sm-2 col-xs-12 title_col">Địa điểm<span class="lab_red">(*)</span>:</label>
 							<div class="col-md-9 col-sm-9 col-xs-12">
-								<input type="text" name="address">
+								<input type="text" name="address" id="post_address" required>
+								<label class="lab_red lab_invisible" id="post_address_error">Bạn cần nhập địa điểm !</label>
 							</div>							
 						</div>
 						<hr/>
@@ -123,7 +131,7 @@
 						<div class="row row-margin-bottom">
 							<label class="col-md-2 col-sm-2 col-xs-12 title_col">Mặt tiền</label>
 							<div class="col-md-3 col-sm-3 col-xs-12">
-								<input type="text" name="">
+								<input type="text" name="facade_width">
 							</div>	
 							<label class="col-md-2 col-sm-2 col-xs-12 title_col">Đường trước nhà</label>
 							<div class="col-md-3 col-sm-3 col-xs-12">
@@ -145,7 +153,7 @@
 							<div class="col-md-3 col-sm-3 col-xs-12">								
 								<label class="select_icon">
 									<select name="m_directional_id" id="m_directional_id">
-										<option>--Chọn hướng nhà--</option>
+										<option value="">--Chọn hướng nhà--</option>
 										{%for item in directionals%}
 											<option value="{{item.m_directional_id}}">{{item.m_directional_name}}</option>
 										{%endfor%}
@@ -164,48 +172,24 @@
 						<div class="row row-margin-bottom">
 							<label class="col-md-2 col-sm-2 col-xs-12 title_col">Tiêu đề <span class="lab_red">(*)</span>:</label>
 							<div class="col-md-9 col-sm-9 col-xs-12">
-								<input type="text" name="post_name">
+								<input type="text" name="post_name" required value="" id="post_name">
+								<label class="lab_red lab_invisible" id="post_name_error">Bạn cần nhập tiêu đề !</label>
 							</div>												
 						</div>
 						<div class="row row-margin-bottom">
 							<label class="col-md-2 col-sm-2 col-xs-12 title_col">Nội dung mô tả <span class="lab_red">(*)</span>:</label>
 							<div class="col-md-9 col-sm-9 col-xs-12">
-								<textarea style="height:100px" name="content"></textarea> 
+								<textarea style="height:100px" name="content" id="post_content" required value=""></textarea> 
+								<label class="lab_red lab_invisible" id="post_content_error">Bạn cần nhập nội dung mô tả!</label>
 							</div>												
 						</div>
 						<div class="row row-margin-bottom">
 							<label class="col-md-2 col-sm-2 col-xs-12 title_col">Cập nhật hình ảnh</label>
 							<div class="col-md-10 col-sm-10 col-xs-12">
-								<!-- <div class="col-md-2 col-sm-2 col-xs-4"> -->
-								<div class="div_img">									
-									<img src="{{url.get('images/post/1777196_81_z.jpg')}}">
-									<a href="javascript:void(0)" class="delete_img">X</a>
-								</div>
-								<div class="div_img">									
-									<img src="{{url.get('images/post/1777196_81_z.jpg')}}">
-									<a href="javascript:void(0)" class="delete_img">X</a>
-								</div>
-								<div class="div_img">									
-									<img src="{{url.get('images/post/1777196_81_z.jpg')}}">
-									<a href="javascript:void(0)" class="delete_img">X</a>
-								</div>
-								<div class="div_img">									
-									<img src="{{url.get('images/post/1777196_81_z.jpg')}}">
-									<a href="javascript:void(0)" class="delete_img">X</a>
-								</div>
-								<div class="div_img">									
-									<img src="{{url.get('images/post/1777196_81_z.jpg')}}">
-									<a href="javascript:void(0)" class="delete_img">X</a>
-								</div>
-								<div class="div_img">									
-									<img src="{{url.get('images/post/1777196_81_z.jpg')}}">
-									<a href="javascript:void(0)" class="delete_img">X</a>
-								</div>
-								<!-- </div> -->
-								<!-- <div class="col-md-2 col-sm-2 col-xs-4"> -->
-								<div class="div_img">
-									<button class="btn_upload" id="btn_upload"><i class="fa fa-cloud-upload"></i><br/>Upload Ảnh</button>
-									<input type="file" name="" style="display:none" id="upload_file">
+														
+								<div class="div_img" id="div_btn_img">
+									<a class="btn_upload" id="btn_upload"><i class="fa fa-cloud-upload"></i><br/>Upload Ảnh</a>
+									<input type="file" multiple="true" style="display: none" accept=".JPG,.PNG,.GIF" id="upload_file">
 								</div>
 							</div>												
 						</div>
@@ -216,31 +200,33 @@
 						<div class="row row-margin-bottom">
 							<label class="col-md-2 col-sm-2 col-xs-12 title_col">Họ tên <span class="lab_red">(*)</span>:</label>
 							<div class="col-md-9 col-sm-9 col-xs-12">
-								<input type="text" name="">
+								<input type="text" name="contract[full_name'" id="contract_name" required value="">
+								<label class="lab_red lab_invisible" id="contract_name_error">Bạn cần nhập họ tên !</label>
 							</div>												
 						</div>
 						<div class="row row-margin-bottom">
 							<label class="col-md-2 col-sm-2 col-xs-12 title_col">Địa chỉ:</label>
 							<div class="col-md-9 col-sm-9 col-xs-12">
-								<input type="text" name="">
+								<input type="text" name="contract[address'">
 							</div>												
 						</div>
 						<div class="row row-margin-bottom">
 							<label class="col-md-2 col-sm-2 col-xs-12 title_col">Điện thoại:</label>
 							<div class="col-md-9 col-sm-9 col-xs-12">
-								<input type="text" name="">
+								<input type="text" name="contract[phone]">
 							</div>												
 						</div>
 						<div class="row row-margin-bottom">
 							<label class="col-md-2 col-sm-2 col-xs-12 title_col">Di động <span class="lab_red">(*)</span>:</label>
 							<div class="col-md-9 col-sm-9 col-xs-12">
-								<input type="text" name="">
+								<input type="text" name="contract[mobie]" id="contract_phone" required>
+								<label class="lab_red lab_invisible" id="contract_phone_error">Bạn cần nhập số di động !</label>
 							</div>												
 						</div>
 						<div class="row row-margin-bottom">
 							<label class="col-md-2 col-sm-2 col-xs-12 title_col">Email:</label>
 							<div class="col-md-9 col-sm-9 col-xs-12">
-								<input type="text" name="">
+								<input type="text" name="contract[email]">
 							</div>												
 						</div>
 						<hr/>
@@ -252,50 +238,53 @@
 							<div class="col-md-2 col-sm-2 col-xs-12">
 								<label class="control control-radio">
 							        Tin siêu vip
-							        <input type="radio" name="laoitinrao" checked="checked" />
+							        <input type="radio" name="view[post_level]" checked="checked" />
 							        <div class="control_indicator"></div>
 							    </label>
 							</div>
 							<div class="col-md-2 col-sm-2 col-xs-12">
 								<label class="control control-radio">
 							        Tin vip
-							        <input type="radio" name="laoitinrao"/>
+							        <input type="radio" name="view[post_level]"/>
 							        <div class="control_indicator"></div>
 							    </label>
 							</div>
 							<div class="col-md-2 col-sm-2 col-xs-12">
 								<label class="control control-radio">
 							        Tin hot
-							        <input type="radio" name="laoitinrao"/>
+							        <input type="radio" name="view[post_level]"/>
 							        <div class="control_indicator"></div>
 							    </label>
 							</div>
 							<div class="col-md-2 col-sm-2 col-xs-12">
 								<label class="control control-radio">
 							        Tin thường
-							        <input type="radio" name="laoitinrao"/>
+							        <input type="radio" name="view[post_level]"/>
 							        <div class="control_indicator"></div>
 							    </label>
 							</div>												
 						</div>
 						<div class="row row-margin-bottom">
-							<label class="col-md-2 col-sm-2 col-xs-12 title_col">Thời gian đăng từ :</label>
+							<label class="col-md-2 col-sm-2 col-xs-12 title_col">Thời gian đăng từ  <span class="lab_red">(*)</span>:</label>
 							<div class="col-md-3 col-sm-3 col-xs-12">
-								<input type="" name="" class="datetimepicker">
+								<input type="" name="view[start_date]" class="datetimepicker" id="view_start" required>
+								<label class="lab_red lab_invisible" id="view_start_error">Bạn cần nhập từ ngày!</label>
 							</div>	
 							<label class="col-md-1 col-sm-1 col-xs-12 title_col">Đến :</label>
 							<div class="col-md-3 col-sm-3 col-xs-12">
-								<input type="" name="" class="datetimepicker">
+								<input type="" name="view[end_level]" class="datetimepicker" id="view_end" required>
+								<label class="lab_red lab_invisible" id="view_end_error">Bạn cần nhập đến ngày !</label>
 							</div>						
 						</div>
+						</form>
 						<div class="row row-margin-bottom" style="margin-top:20px">
 							<div class="col-md-12 col-sm-12 col-xs-12" style="text-align: center;">
-								<button class="btn_dangtin btn_red"><i class="fa fa-times"></i>Hủy bỏ</button>
-								<button class="btn_dangtin" style="width:110px;"><i class="fa fa-eye"></i>Xem trước</button>
-								<button class="btn_dangtin" ><i class="fa fa-check-square-o"></i>Đăng tin</button>
+								<button class="btn_dangtin btn_red" id="btn_cancel"><i class="fa fa-times"></i>Hủy bỏ</button>
+								<button class="btn_dangtin" id="btn_preview" style="width:110px;"><i class="fa fa-eye"></i>Xem trước</button>
+								<button class="btn_dangtin" id="btn_save" ><i class="fa fa-check-square-o"></i>Đăng tin</button>
 							</div>
 						</div>
-					</form>
+					
 				</div>
 			</div>
 		</div>
@@ -303,6 +292,7 @@
 </div>
 {{ stylesheet_link('template1/css/jquery.datetimepicker.css') }}
 {{ javascript_include('template1/js/jquery.datetimepicker.full.min.js') }}
+{{ partial('includes/pho_ajax') }}
 <script type="text/javascript">
 	$(document).ready(function() {
 		var district_list = Array();
@@ -348,7 +338,7 @@
 		$(document).off('change','#m_district_id');
 		$(document).on('change','#m_district_id',function(){
 			var val = $(this).val();
-			var option = '<option>--Chọn Phường/Xã--</option>';
+			var option = '<option value="">--Chọn Phường/Xã--</option>';
 			$.each(ward_list,function(key,item){
 				//console.log(item);
 				if(val == item[2]){
@@ -361,7 +351,7 @@
 		$(document).off('change','#m_ward_id');
 		$(document).on('change','#m_ward_id',function(){
 			var val = $(this).val();
-			var option = '<option>--Chọn Đường/Phố--</option>';
+			var option = '<option value="">--Chọn Đường/Phố--</option>';
 			$.each(ward_list,function(key,item){
 				//console.log(item);
 				if(val == item[2]){
@@ -378,7 +368,7 @@
 			change_m_type_id(val);
 		});
 		function change_m_type_id(val){
-			var option = '<option>--Chọn loại bất động sản--</option>';
+			var option = '<option value="">--Chọn loại bất động sản--</option>';
 			$.each(category_list,function(key,item){
 				//console.log(item);
 				if(val == item[2]){
@@ -388,6 +378,67 @@
 			$('#ctg_id').empty();
 			$('#ctg_id').append(option);
 		}
+		function topFunction() {
+		    document.body.scrollTop = 0; // For Chrome, Safari and Opera 
+		    document.documentElement.scrollTop = 0; // For IE and Firefox
+		}
+		$(document).off('click','#btn_save'); 
+        $(document).on('click','#btn_save',function(event){
+        	var msg = check_validate_update();
+          	if(!msg){
+            	topFunction();
+            	return;
+          	}
+          	var arr = $('#from_post').serializeArray();
+	      	Pho_json_ajax('POST',"{{url.get('posts/update')}}" ,arr,function(datas){
+		        if(datas.status =="OK"){
+		          //Pho_modal_close("modal1");
+		          Pho_message_box("Thông báo",'Đăng tin thành công !');
+		         // Pho_direct("{{url.get('news')}}");
+		        }else{
+		          Pho_message_box_error("Lỗi",datas.msg);
+		        }	                
+	        });
+        });
+        var check_validate_update = function(){
+        	var flg = true;
+        	$('input:required').each(function(key,item){
+        		if($(this).val().trim().length == 0){
+        			$('#'+ $(this).attr('id') + "_error").show();
+        			flg = false;
+        		}else{
+        			$('#'+ $(this).attr('id') + "_error").hide();
+        		}
+        	});
+        	$('select:required').each(function(key,item){
+        		if($(this).val().trim().length == 0){
+        			$('#'+ $(this).attr('id') + "_error").show();
+        			flg = false;
+        		}else{
+        			$('#'+ $(this).attr('id') + "_error").hide();
+        		}
+        	});
+        	$('textarea:required').each(function(key,item){
+        		if($(this).val().trim().length == 0){
+        			$('#'+ $(this).attr('id') + "_error").show();
+        			flg = false;
+        		}else{
+        			$('#'+ $(this).attr('id') + "_error").hide();
+        		}
+        	});        	
+        	if(!flg){
+        		$('#lab_message_error').show();
+        	}else{
+        		$('#lab_message_error').hide();
+        	}
+        	return flg;
+        }
+		//delete file
+		$(document).off('click','.delete_img'); 
+        $(document).on('click','.delete_img',function(event){
+        	var id = $(this).attr('id').replace('delete_img_','');
+        	$('#div_img_'+id).remove();
+        });
 		//upload file
 		$(document).off('click','#btn_upload'); 
         $(document).on('click','#btn_upload',function(event){
@@ -405,22 +456,22 @@
         	for(var i=0;i<file_data.length;i++){
         		form_data.append(i,file_data[i]);
         	}        	
-            
+            form_data.append("folder_tmp",$('#folder_tmp').val());
             var base_url= "{{url.get('')}}";
             //console.log(form_data);	
         	Pho_upload("{{url.get('posts/upload')}}" ,form_data,function(datas){
 				if(datas.status =="OK"){
 					//console.log(datas);					
-                   // var cnt_add = $("#list_file").find('.add_img').length;  			
+                    var cnt_add = $('.add_img').length;  			
 					for(var i=0;i<datas.link.length;i++){
 		        		//form_data.append(i,file_data[i]);
 		        		cnt_add++;
-		        		var html_tr= '<tr id="tr_add_'+cnt_add+'"><td><img class="img-rounded" height="60" src="'+datas.link[i]+'" id="img_add_'+cnt_add+'"></td><td><a class="btn btn-danger btn-xs btn_del_img" id="del_add_'+cnt_add+'">Xóa hình</a></td><td><label><input type="radio" name="chk" value="1" id="radio_add_'+cnt_add+'">Chọn làm ảnh đại diện </label><input type="hidden" name="img_add['+cnt_add+']" value="'+datas.link[i]+'"></td></tr>';
-		        		$("#list_file").append(html_tr);		        		
+		        		var html_tr= '<div class="div_img" id="div_img_add_'+cnt_add+'"><img class="add_img" src="'+datas.link[i]+'"><a href="javascript:void(0)" class="delete_img" id="delete_img_add_'+cnt_add+'">X</a><input type="hidden" name="img_add['+cnt_add+']" value="'+datas.link[i]+'"></div>';
+		        		$("#div_btn_img").before(html_tr);		        		
 		        	}
-		        	if(get_avata_id()==""){
-		        		$("#radio_add_1").prop('checked',true);	
-		        	}
+		        	// if(get_avata_id()==""){
+		        	// 	$("#radio_add_1").prop('checked',true);	
+		        	// }
 					//var file_name = datas.link.replace(base_url,"");	
 					//$('#img_path').val(file_name);				
 				}else{

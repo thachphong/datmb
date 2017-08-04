@@ -21,6 +21,7 @@ class Module
 			'Multiple\Frontend\Plugins'     => '../apps/frontend/plugins/',
 			'Multiple\Models' => '../apps/models/',
 			'Multiple\PHOClass' => '../apps/phoclass/',
+			'Multiple\Library'      => '../apps/library/',
 		));
 
 		$loader->register();
