@@ -141,7 +141,7 @@ class PhoLog
     
     public static function debug_var($predix, $var)
     {
-        static::write_file($predix, var_export($var, true));
+        PhoLog::write_file($predix, var_export($var, true));
     }
 
 }

@@ -204,7 +204,7 @@ class Category extends DBModel
                 'bind' => array('ctg_no' => $ctg_no,'ctg_id'=>$ctg_id)
         ));
     }
-    public function get_all(){
+    public static function get_all(){
         $data = Category::query()
                 ->where("del_flg = 0")  
                 ->order("ctg_name")            

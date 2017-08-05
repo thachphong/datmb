@@ -17,4 +17,10 @@ class DBModel extends Model
 		$stmt = $db->prepare($sql);
 		return $stmt->execute($param);
     }
+    protected function query_first($sql,$param=array( )){        
+        $db = \Phalcon\DI::getDefault()->get('db');
+        $stmt = $db->prepare($sql);
+        $stmt->execute($param);
+        return $stmt->fetch(\PDO::FETCH_ASSOC);      
+    }
 }

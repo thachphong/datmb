@@ -13,6 +13,10 @@
 					</div>
 					<form enctype="multipart/form-data" id="from_post">
 						<input type="hidden" name="folder_tmp" id="folder_tmp"  value="{{folder_tmp}}">
+						<input type="hidden" name="post_id" id="post_id"  value="{{post_id}}">
+						<input type="hidden" name="post_view_id"  value="{{post_view_id}}">
+						<input type="hidden" name="post_contract_id" value="{{post_contract_id}}">					
+
 						<div class="row row-margin-bottom lab_invisible" id="lab_message_error" style="text-align:center">
 							<label class="lab_red">Có một số thông tin chưa hợp lệ, vui lòng nhập lại !</label>
 						</div>
@@ -21,14 +25,14 @@
 							<div class="col-md-2 col-sm-2 col-xs-12">
 								<label class="control control-radio">
 							        BĐS Bán
-							        <input type="radio" name="m_type_id" checked="checked" value="1" class="m_type_id" />
+							        <input type="radio" name="m_type_id" {%if m_type_id ==1%}checked="checked"{%endif%} value="1" class="m_type_id" />
 							        <div class="control_indicator"></div>
 							    </label>
 							</div>
 							<div class="col-md-2 col-sm-2 col-xs-12">							
 								<label class="control control-radio">
 							        BĐS Cho thuê
-							        <input type="radio" name="m_type_id" value="2" class="m_type_id"/>
+							        <input type="radio" name="m_type_id" {%if m_type_id ==2%}checked="checked"{%endif%} value="2" class="m_type_id"/>
 							        <div class="control_indicator"></div>
 							    </label>
 							</div>
@@ -51,7 +55,7 @@
 									<select id="m_provin_id" name="m_provin_id" required>
 										<option value="">--Chọn Tỉnh/Thành phố--</option>
 										{%for item in provincials%}
-											<option value="{{item.m_provin_id}}">{{item.m_provin_name}}</option>
+											<option value="{{item.m_provin_id}}" {%if m_provin_id == item.m_provin_id%}selected{%endif%}>{{item.m_provin_name}}</option>
 										{%endfor%}
 									</select>
 								</label>
@@ -96,15 +100,15 @@
 						<div class="row row-margin-bottom">
 							<label class="col-md-2 col-sm-2 col-xs-12 title_col">Giá</label>
 							<div class="col-md-4 col-sm-4 col-xs-12">
-								<input type="text" name="price">
+								<input type="number" name="price" value="{{price}}">
 							</div>
 							<label class="col-md-1 col-sm-1 col-xs-12 title_col">Đơn vị</label>
 							<div class="col-md-3 col-sm-3 col-xs-12">
 								<label class="select_icon">
-									<select name="m_unit_id">
+									<select name="unit_price">
 										<option value="">--Chọn đơn vị--</option>
 										{%for item in units%}
-											<option value="{{item.m_unit_id}}">{{item.m_unit_name}}</option>
+											<option value="{{item.m_unit_id}}" {%if unit_price == item.m_unit_id%}selected{%endif%}>{{item.m_unit_name}}</option>
 										{%endfor%}
 									</select>
 								</label>
@@ -113,14 +117,14 @@
 						<div class="row row-margin-bottom">
 							<label class="col-md-2 col-sm-2 col-xs-12 title_col">Diện tích</label>
 							<div class="col-md-3 col-sm-3 col-xs-12">
-								<input type="text" name="acreage">
+								<input type="number" name="acreage" value="{{acreage}}">
 							</div>
 							<label class="col-md-1 col-sm-1 col-xs-12 title_col">m2</label>
 						</div>
 						<div class="row row-margin-bottom">
 							<label class="col-md-2 col-sm-2 col-xs-12 title_col">Địa điểm<span class="lab_red">(*)</span>:</label>
 							<div class="col-md-9 col-sm-9 col-xs-12">
-								<input type="text" name="address" id="post_address" required>
+								<input type="text" name="address" id="post_address" required value="{{address}}">
 								<label class="lab_red lab_invisible" id="post_address_error">Bạn cần nhập địa điểm !</label>
 							</div>							
 						</div>
@@ -131,21 +135,21 @@
 						<div class="row row-margin-bottom">
 							<label class="col-md-2 col-sm-2 col-xs-12 title_col">Mặt tiền</label>
 							<div class="col-md-3 col-sm-3 col-xs-12">
-								<input type="text" name="facade_width">
+								<input type="number" name="facade_width" value="{{facade_width}}">
 							</div>	
 							<label class="col-md-2 col-sm-2 col-xs-12 title_col">Đường trước nhà</label>
 							<div class="col-md-3 col-sm-3 col-xs-12">
-								<input type="text" name="street_width">
+								<input type="number" name="street_width" value="{{street_width}}">
 							</div>						
 						</div>
 						<div class="row row-margin-bottom">
 							<label class="col-md-2 col-sm-2 col-xs-12 title_col">Số tầng</label>
 							<div class="col-md-3 col-sm-3 col-xs-12">
-								<input type="" name="floor_num">
+								<input type="number" name="floor_num" value="{{floor_num}}">
 							</div>	
 							<label class="col-md-2 col-sm-2 col-xs-12 title_col">Số phòng</label>
 							<div class="col-md-3 col-sm-3 col-xs-12">
-								<input type="text" name="room_num">
+								<input type="number" name="room_num" value="{{room_num}}">
 							</div>						
 						</div>
 						<div class="row row-margin-bottom">
@@ -155,14 +159,14 @@
 									<select name="m_directional_id" id="m_directional_id">
 										<option value="">--Chọn hướng nhà--</option>
 										{%for item in directionals%}
-											<option value="{{item.m_directional_id}}">{{item.m_directional_name}}</option>
+											<option value="{{item.m_directional_id}}" {%if m_directional_id == item.m_directional_id%}selected{%endif%}>{{item.m_directional_name}}</option>
 										{%endfor%}
 									</select>
 								</label>
 							</div>	
 							<label class="col-md-2 col-sm-2 col-xs-12 title_col">Số toilet</label>
 							<div class="col-md-3 col-sm-3 col-xs-12">
-								<input type="text" name="toilet_num">
+								<input type="number" name="toilet_num" value="{{toilet_num}}">
 							</div>						
 						</div>
 						<hr/>
@@ -172,21 +176,26 @@
 						<div class="row row-margin-bottom">
 							<label class="col-md-2 col-sm-2 col-xs-12 title_col">Tiêu đề <span class="lab_red">(*)</span>:</label>
 							<div class="col-md-9 col-sm-9 col-xs-12">
-								<input type="text" name="post_name" required value="" id="post_name">
+								<input type="text" name="post_name" required value="{{post_name}}" id="post_name">
 								<label class="lab_red lab_invisible" id="post_name_error">Bạn cần nhập tiêu đề !</label>
 							</div>												
 						</div>
 						<div class="row row-margin-bottom">
 							<label class="col-md-2 col-sm-2 col-xs-12 title_col">Nội dung mô tả <span class="lab_red">(*)</span>:</label>
 							<div class="col-md-9 col-sm-9 col-xs-12">
-								<textarea style="height:100px" name="content" id="post_content" required value=""></textarea> 
+								<textarea style="height:100px" name="content" id="post_content" required >{{content}}</textarea> 
 								<label class="lab_red lab_invisible" id="post_content_error">Bạn cần nhập nội dung mô tả!</label>
 							</div>												
 						</div>
 						<div class="row row-margin-bottom">
-							<label class="col-md-2 col-sm-2 col-xs-12 title_col">Cập nhật hình ảnh</label>
-							<div class="col-md-10 col-sm-10 col-xs-12">
-														
+							<label class="col-md-2 col-sm-2 col-xs-12 title_col">Cập nhật hình ảnh</label>							
+							<div class="col-md-10 col-sm-10 col-xs-12" id="img_box">
+								{%for img in img_list%}
+								<div class="div_img" id="div_img_{{img.post_img_id}}">
+									<img class="" src="{{url.get(img.img_path)}}">
+									<a href="javascript:void(0)" class="delete_img" id="delete_img_{{img.post_img_id}}">X</a>
+								</div>
+								{%endfor%}														
 								<div class="div_img" id="div_btn_img">
 									<a class="btn_upload" id="btn_upload"><i class="fa fa-cloud-upload"></i><br/>Upload Ảnh</a>
 									<input type="file" multiple="true" style="display: none" accept=".JPG,.PNG,.GIF" id="upload_file">
@@ -200,33 +209,33 @@
 						<div class="row row-margin-bottom">
 							<label class="col-md-2 col-sm-2 col-xs-12 title_col">Họ tên <span class="lab_red">(*)</span>:</label>
 							<div class="col-md-9 col-sm-9 col-xs-12">
-								<input type="text" name="contract[full_name'" id="contract_name" required value="">
+								<input type="text" name="contract[full_name]" id="contract_name" required value="{{full_name}}">
 								<label class="lab_red lab_invisible" id="contract_name_error">Bạn cần nhập họ tên !</label>
 							</div>												
 						</div>
 						<div class="row row-margin-bottom">
 							<label class="col-md-2 col-sm-2 col-xs-12 title_col">Địa chỉ:</label>
 							<div class="col-md-9 col-sm-9 col-xs-12">
-								<input type="text" name="contract[address'">
+								<input type="text" name="contract[address]" value="{{contract_address}}">
 							</div>												
 						</div>
 						<div class="row row-margin-bottom">
 							<label class="col-md-2 col-sm-2 col-xs-12 title_col">Điện thoại:</label>
 							<div class="col-md-9 col-sm-9 col-xs-12">
-								<input type="text" name="contract[phone]">
+								<input type="text" name="contract[phone]" value="{{phone}}">
 							</div>												
 						</div>
 						<div class="row row-margin-bottom">
 							<label class="col-md-2 col-sm-2 col-xs-12 title_col">Di động <span class="lab_red">(*)</span>:</label>
 							<div class="col-md-9 col-sm-9 col-xs-12">
-								<input type="text" name="contract[mobie]" id="contract_phone" required>
+								<input type="text" name="contract[mobie]" id="contract_phone" required value="{{mobie}}">
 								<label class="lab_red lab_invisible" id="contract_phone_error">Bạn cần nhập số di động !</label>
 							</div>												
 						</div>
 						<div class="row row-margin-bottom">
 							<label class="col-md-2 col-sm-2 col-xs-12 title_col">Email:</label>
 							<div class="col-md-9 col-sm-9 col-xs-12">
-								<input type="text" name="contract[email]">
+								<input type="text" name="contract[email]" value="{{email}}">
 							</div>												
 						</div>
 						<hr/>
@@ -238,28 +247,28 @@
 							<div class="col-md-2 col-sm-2 col-xs-12">
 								<label class="control control-radio">
 							        Tin siêu vip
-							        <input type="radio" name="view[post_level]" checked="checked" />
+							        <input type="radio" name="view[post_level]" {%if m_type_id ==3%}checked="checked"{%endif%} value="3" />
 							        <div class="control_indicator"></div>
 							    </label>
 							</div>
 							<div class="col-md-2 col-sm-2 col-xs-12">
 								<label class="control control-radio">
 							        Tin vip
-							        <input type="radio" name="view[post_level]"/>
+							        <input type="radio" name="view[post_level]" value="2" {%if m_type_id ==2%}checked="checked"{%endif%}/>
 							        <div class="control_indicator"></div>
 							    </label>
 							</div>
 							<div class="col-md-2 col-sm-2 col-xs-12">
 								<label class="control control-radio">
 							        Tin hot
-							        <input type="radio" name="view[post_level]"/>
+							        <input type="radio" name="view[post_level]" value="1" {%if m_type_id ==1%}checked="checked"{%endif%}/>
 							        <div class="control_indicator"></div>
 							    </label>
 							</div>
 							<div class="col-md-2 col-sm-2 col-xs-12">
 								<label class="control control-radio">
 							        Tin thường
-							        <input type="radio" name="view[post_level]"/>
+							        <input type="radio" name="view[post_level]" value="0" {%if m_type_id ==0%}checked="checked"{%endif%}/>
 							        <div class="control_indicator"></div>
 							    </label>
 							</div>												
@@ -267,12 +276,12 @@
 						<div class="row row-margin-bottom">
 							<label class="col-md-2 col-sm-2 col-xs-12 title_col">Thời gian đăng từ  <span class="lab_red">(*)</span>:</label>
 							<div class="col-md-3 col-sm-3 col-xs-12">
-								<input type="" name="view[start_date]" class="datetimepicker" id="view_start" required>
+								<input type="" name="view[start_date]" class="datetimepicker" id="view_start" required value="{{start_date}}">
 								<label class="lab_red lab_invisible" id="view_start_error">Bạn cần nhập từ ngày!</label>
 							</div>	
 							<label class="col-md-1 col-sm-1 col-xs-12 title_col">Đến :</label>
 							<div class="col-md-3 col-sm-3 col-xs-12">
-								<input type="" name="view[end_level]" class="datetimepicker" id="view_end" required>
+								<input type="" name="view[end_date]" class="datetimepicker" id="view_end" required value="{{end_date}}">
 								<label class="lab_red lab_invisible" id="view_end_error">Bạn cần nhập đến ngày !</label>
 							</div>						
 						</div>
@@ -322,32 +331,60 @@
           lang:'ru'
     	});
 		//console.log(district_list);
+		
 		$(document).off('change','#m_provin_id');
-		$(document).on('change','#m_provin_id',function(){
-			var val = $(this).val();
+		$(document).on('change','#m_provin_id',function(){			
+			change_district_option('');
+		});
+		var change_district_option= function(district_id){
+			var val = $('#m_provin_id').val();
 			var option = '<option value="">--Chọn Quận/HUyện--</option>';
 			$.each(district_list,function(key,item){
 				//console.log(item);
 				if(val == item[2]){
-					option +='<option value="'+item[0]+'">'+item[1]+'</option>';
+					if(district_id == item[0] ){
+						option +='<option value="'+item[0]+'" selected >'+item[1]+'</option>';
+					}else{
+						option +='<option value="'+item[0]+'" >'+item[1]+'</option>';
+					}					
 				}
 			});
 			$('#m_district_id').empty();
 			$('#m_district_id').append(option);
-		});
+		};
+		change_district_option('{{m_district_id}}');
+
 		$(document).off('change','#m_district_id');
 		$(document).on('change','#m_district_id',function(){
-			var val = $(this).val();
+			// var val = $(this).val();
+			// var option = '<option value="">--Chọn Phường/Xã--</option>';
+			// $.each(ward_list,function(key,item){
+			// 	//console.log(item);
+			// 	if(val == item[2]){
+			// 		option +='<option value="'+item[0]+'">'+item[1]+'</option>';
+			// 	}
+			// });
+			// $('#m_ward_id').empty();
+			// $('#m_ward_id').append(option);
+			change_war_option('');
+		});
+		var change_war_option = function(m_ward_id){
+			var val = $('#m_district_id').val();
 			var option = '<option value="">--Chọn Phường/Xã--</option>';
 			$.each(ward_list,function(key,item){
 				//console.log(item);
 				if(val == item[2]){
-					option +='<option value="'+item[0]+'">'+item[1]+'</option>';
+					if(m_ward_id == item[0]){
+						option +='<option value="'+item[0]+'" selected>'+item[1]+'</option>';
+					}else{
+						option +='<option value="'+item[0]+'">'+item[1]+'</option>';
+					}					
 				}
 			});
 			$('#m_ward_id').empty();
 			$('#m_ward_id').append(option);
-		});
+		};
+		change_war_option('{{m_ward_id}}');
 		$(document).off('change','#m_ward_id');
 		$(document).on('change','#m_ward_id',function(){
 			var val = $(this).val();
@@ -361,23 +398,29 @@
 			$('#m_street_id').empty();
 			$('#m_street_id').append(option);
 		});
-		change_m_type_id($("input[name='m_type_id']:checked").val());
+		//change_m_type_id($("input[name='m_type_id']:checked").val());
 		$(document).off('change','.m_type_id');
 		$(document).on('change','.m_type_id',function(){
-			var val = $("input[name='m_type_id']:checked").val();
-			change_m_type_id(val);
+			//var val = $("input[name='m_type_id']:checked").val();
+			change_m_type_id('');
 		});
-		function change_m_type_id(val){
+		function change_m_type_id(ctg_id){
+			var val = $("input[name='m_type_id']:checked").val();
 			var option = '<option value="">--Chọn loại bất động sản--</option>';
 			$.each(category_list,function(key,item){
 				//console.log(item);
 				if(val == item[2]){
-					option +='<option value="'+item[0]+'">'+item[1]+'</option>';
+					if(ctg_id == item[0]){
+						option +='<option value="'+item[0]+'" selected>'+item[1]+'</option>';
+					}else{
+						option +='<option value="'+item[0]+'">'+item[1]+'</option>';
+					}					
 				}
 			});
 			$('#ctg_id').empty();
 			$('#ctg_id').append(option);
-		}
+		}		
+		change_m_type_id('{{ctg_id}}');
 		function topFunction() {
 		    document.body.scrollTop = 0; // For Chrome, Safari and Opera 
 		    document.documentElement.scrollTop = 0; // For IE and Firefox
@@ -393,8 +436,8 @@
 	      	Pho_json_ajax('POST',"{{url.get('posts/update')}}" ,arr,function(datas){
 		        if(datas.status =="OK"){
 		          //Pho_modal_close("modal1");
-		          Pho_message_box("Thông báo",'Đăng tin thành công !');
-		         // Pho_direct("{{url.get('news')}}");
+		          //Pho_message_box("Thông báo",'Đăng tin thành công !');
+		          Pho_direct("{{url.get('dang-tin-thanh-cong/')}}" + datas.msg);
 		        }else{
 		          Pho_message_box_error("Lỗi",datas.msg);
 		        }	                
@@ -437,6 +480,12 @@
 		$(document).off('click','.delete_img'); 
         $(document).on('click','.delete_img',function(event){
         	var id = $(this).attr('id').replace('delete_img_','');
+        	var base_url= "{{url.get('')}}";
+        	src = $('#div_img_'+id +' img').attr('src');
+        	src = src.replace(base_url,"");	        	
+        	if(id.indexOf('add') < 0){
+        		$('#img_box').append('<input type="hidden" name="img_del[]" value="'+src+'">');
+        	}
         	$('#div_img_'+id).remove();
         });
 		//upload file

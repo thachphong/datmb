@@ -3,10 +3,11 @@
 namespace Multiple\Models;
 
 use Multiple\Models\TagsPosts;
-use Phalcon\Mvc\Model;
+use Multiple\Models\DBModel;
+use Multiple\PHOClass\PHOArray;
 //use Phalcon\Mvc\Model\Query;
 
-class Posts extends Model
+class Posts extends DBModel
 {
     public  $post_id ;
     public  $post_no ;
@@ -42,6 +43,49 @@ class Posts extends Model
     public function get_by_id($id){
 	 	return Posts::findFirst(array("post_id = :post_id:  ",'bind' => array('post_id' => $id) ));
 	}
+	public function get_info($id){
+		$sql="select p.post_id,p.post_name,p.post_no, v.post_level,DATEDIFF(v.end_date, v.start_date) post_date_num 
+				from posts p
+				INNER JOIN posts_view v on v.post_id = p.post_id
+				where p.post_id = :post_id";
+		return $this->query_first($sql,array('post_id'=>$id));
+	}
+	public function get_post_row($id){
+		$sql = "select p.post_id,p.post_name,p.post_no,
+				  p.ctg_id,
+				  p.m_type_id,
+				  p.status,
+				  p.m_provin_id,
+				  p.m_district_id,
+				  p.m_ward_id,
+				  p.price,
+				  p.unit_price,
+				  p.acreage,
+				  p.address,
+				  p.content,  
+				  p.del_flg,
+				  p.toilet_num,
+				  p.room_num,
+				  p.floor_num,
+				  p.street_width,
+				  p.facade_width,
+				  p.m_directional_id,
+				 v.post_level,				
+				 DATE_FORMAT(v.end_date ,'%d/%m/%Y')  end_date,
+				 DATE_FORMAT(v.start_date ,'%d/%m/%Y')  start_date,	
+				 V.post_view_id,
+				c.post_contract_id,		
+				c.full_name,
+				c.address contract_address,
+				c.phone,
+				c.mobie,
+				c.email
+				from posts p
+				INNER JOIN posts_view v on v.post_id = p.post_id
+				INNER JOIN posts_contract c on c.post_id = p.post_id
+				where p.post_id = :post_id";
+		return $this->query_first($sql,array('post_id'=>$id));
+	}	
 	public function _insert($param){
 		//$this->post_id = $param[''];
 	    $this->post_no = $param['post_no'];
@@ -55,9 +99,9 @@ class Posts extends Model
 	    $this->price   = $param['price'];
 	    $this->unit_price  = $param['unit_price'];
 	    $this->acreage = $param['acreage'];
-	    $this->acreage = $param['acreage'];
+	   // $this->acreage = $param['acreage'];
 	    $this->content = $param['content'];
-	   // $this->add_date    = $param[''];
+	    $this->address    = $param['address'];
 	    $this->add_user    = $param['user_id'];
 	    //$this->upd_date    = $param[''];
 	    $this->upd_user    = $param['user_id'];
@@ -70,6 +114,72 @@ class Posts extends Model
 	    $this->m_directional_id    = $param['m_directional_id'];
 	    $this->save();
 	    return $this->post_id;
+	}
+	public function _update($param){
+		$sql = "update posts
+					set post_name = :post_name,
+					ctg_id = :ctg_id,
+					post_no = :post_no,
+					m_provin_id = :m_provin_id,
+					m_district_id = :m_district_id,
+					price = :price,
+					acreage = :acreage,
+					content = :content,
+					upd_user = :user_id,
+					toilet_num = :toilet_num,
+					room_num = :room_num,
+					floor_num = :floor_num,
+					street_width = :street_width,
+					facade_width = :facade_width,
+					m_directional_id = :m_directional_id,
+					address =:address,
+					m_type_id =:m_type_id,
+					upd_date =now()
+
+				where post_id =:post_id
+				";
+		$this->pho_execute($sql, PHOArray::filter($param, array(
+                    'post_id'
+                    ,'post_name' 
+                    ,'ctg_id'                               
+                    ,'post_no'
+                    ,'user_id'
+                    ,'m_provin_id'
+                    ,'m_type_id'
+                    ,'m_district_id'
+                    ,'price'
+                    ,'acreage'
+                    ,'content'
+                    ,'toilet_num'
+                    ,'room_num'
+                    ,'floor_num'
+                    ,'street_width'
+                    ,'m_directional_id'
+                    ,'address'
+                    ,'facade_width'
+                    )));  
+        return TRUE;
+	}
+	public function get_list_new($post_type= '',$limit = 10){
+		$where ="";
+		if($post_type !=''){
+			$where =" and v.post_level = $post_type";
+		}
+		$sql ="select p.post_id,p.post_name,p.post_no,p.price,p.acreage,pro.m_provin_name,dis.m_district_name,
+				un.m_unit_name ,im.img_path,
+				DATE_FORMAT(v.start_date ,'%d/%m/%Y')  start_date
+				from posts p
+				INNER JOIN m_provincial pro on pro.m_provin_id = p.m_provin_id
+				INNER JOIN m_district dis on dis.m_district_id = p.m_district_id
+				INNER JOIN posts_view v on v.post_id = p.post_id
+				LEFT JOIN posts_img im on im.post_id = p.post_id and im.avata_flg = 1
+				LEFT JOIN m_unit un on un.m_unit_id = p.unit_price 
+
+				where p.del_flg = 0
+				$where
+				order by p.post_id DESC
+				limit 10";
+		return $this->pho_query($sql);
 	}
  //    public function get_new($limit = 6){       
  //        $data = Posts::query()
