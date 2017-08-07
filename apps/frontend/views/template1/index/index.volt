@@ -133,7 +133,7 @@
             </div>
             <div class="viplist">
                {%for item in viplist%}
-                  <div class="vipitem pn_background">
+                  <div class="vipitem pn_background pn_border">
                      <img src="{{url.get('crop/50x50/')}}{{item['img_path']}}">
                      <div >
                         <a href="{{url.get(item['post_no'])}}{{item['post_id']}}">{{item['post_name']}}</a>

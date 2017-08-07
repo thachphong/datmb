@@ -7,7 +7,7 @@
 					<span class="bg_icon"><i class="fa post-pencil"></i></span>
 					<h1>ĐĂNG TIN RAO BÁN, CHO THUÊ NHÀ ĐẤT</h1>
 				</div>				
-				<div class="pn_content">
+				<div class="pn_content pn_background pn_border margin_top">
 					<div>
 						<h3>Thông tin cơ bản</h3>
 					</div>

@@ -7,7 +7,7 @@
 					<span class="bg_icon"><i class="fa post-pencil"></i></span>
 					<h1>ĐĂNG TIN THÀNH CÔNG </h1>
 				</div>				
-				<div class="pn_content pn_background pn_border margin_top">
+				<div class="pn_content">
 					<div style="text-align:center">
 						<h3>Tin của bạn đã được hiển thị trên website</h3>
 					</div>
