@@ -128,4 +128,29 @@ class News extends DBModel
                 'bind' => array('news_no' => $news_no,'news_id'=>$news_id)
         ));
   }
+  public function get_news_rows($ctg_id,$limit=10){
+        $sql="select n.news_id,
+                  n.news_no,
+                  n.news_name,
+                  n.des,
+                  n.img_path,
+                  n.add_date
+              from news n              
+              where n.ctg_id= :ctg_id 
+              order by n.news_id desc
+              limit $limit";
+        return $this->pho_query($sql,array('ctg_id'=>$ctg_id));
+  }
+  public function get_news_pupular($limit=10){
+        $sql="select n.news_id,
+                  n.news_no,
+                  n.news_name,
+                  n.des,
+                  n.img_path,
+                  n.add_date
+              from news n 
+              order by n.news_id desc
+              limit $limit";
+        return $this->pho_query($sql);
+  }
 }
