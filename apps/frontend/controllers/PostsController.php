@@ -21,7 +21,10 @@ use Multiple\Library\FilePHP;
 use Multiple\PHOClass\PhoLog;
 class PostsController extends PHOController
 {
-
+	public function initialize()
+    {        
+        $this->check_login();
+    }
 	public function indexAction($id)
 	{
 				

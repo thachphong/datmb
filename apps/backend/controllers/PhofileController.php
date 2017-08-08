@@ -10,7 +10,7 @@ class PhofileController extends PHOController
 
     public function initialize()
     {        
-        $this->check_login();
+        $this->check_loginadmin();
     }
 	
 	public function uploadAction($folder_tmp){

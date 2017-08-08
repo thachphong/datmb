@@ -6,12 +6,13 @@ use Multiple\PHOClass\PHOController;
 use Multiple\Models\Users;
 use Multiple\Models\Define;
 use Multiple\Library\Mail;
+use Multiple\PHOClass\PhoLog;
 class UsersController extends PHOController
 {
 
 	public function indexAction()
 	{
-		echo '<br>', __METHOD__;
+		
 	}
 	public function registerAction(){
 		$this->set_template_share();
@@ -19,6 +20,53 @@ class UsersController extends PHOController
 	public function loginAction(){
 		$this->set_template_share();
 	}
+	public function activeAction(){
+		$param = $this->get_Gparam(array('email','rd'));
+		$db = new Users();
+		if($db->active($param['email'],$param['rd'])){
+			$res['active_msg'] = 'Kích hoạt tài khoản thành công !';
+		}else{
+			$res['active_msg'] = 'Link kích hoạt tài khoản không đúng !';
+		}
+		
+		$this->set_template_share();
+		$this->ViewVAR($res);
+	}
+	public function logoutAction()
+	{
+		$this->session->set('auth', null);
+        return $this->_redirect('dang-nhap');
+	}
+	public function authAction(){
+		
+        $result['status']='NOT';
+        $result['msg']='';        
+        if ($this->request->isPost()) {
+        	$param = $this->get_param(array('email','password'));
+        	PhoLog::debug_var('---test---',$param);  
+            $db = new Users();
+            $user = $db->get_user($param['email'], $param['password']);
+                   
+            $result['msg'] = 'Tên đăng nhập hoặc mật khẩu không đúng !';
+            if ($user != false) {
+            	if($user->status== 1){
+            		$this->_registerSession($user);
+                	$result['status'] ='OK';
+                	$result['msg'] = 'Đăng nhập thành công !';
+            	}else if($user->status== 0){
+            		$result['status'] ='NOT';
+                	$result['msg'] = 'Tài khoản của bạn chưa kích hoạt, vui lòng kiểm tra mail và click vào link kích hoạt tài khoản !';
+            	}
+                
+            }
+        }
+
+        return $this->ViewJSON($result);
+	}
+	private function _registerSession(Users $user)
+    {
+        $this->session->set('auth', $user);
+    }
 	public function updateAction(){
 		$param = $this->get_param(array('user_no','user_name','email','mobile','address','pass','sex'));
 		$result = array('status' => 'OK');
@@ -27,13 +75,13 @@ class UsersController extends PHOController
 		$db = new Users();
 	
 		$msg = $db->get_validation($param);
-		$add_date = "";
+		
 		if($msg === true){
 			$db->_insert($param);
 			$this->sendmail($db);
-		}else{
+		}else{			
+			$result = $msg;
 			$result['status'] = 'NOT';	
-			$result['msg'] = $msg;
 		}
 		return $this->ViewJSON($result);
 	}
@@ -52,7 +100,7 @@ class UsersController extends PHOController
 		$email->AddListAddress($mail_to);
 		$email->add_replyto($data->define_val,'datxanhviet.vn');
                 
-		$email->Subject = 'Thông tin đặt hàng - '.date('d/m/Y H:i:s');                
+		$email->Subject = 'Đăng ký tài khoản thành công - '.date('d/m/Y H:i:s');                
 		$email->loadbody('template_mail.html');
 		$email->replaceBody($replacements);
 		$result = $email->send();

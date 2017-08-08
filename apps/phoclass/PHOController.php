@@ -14,6 +14,15 @@ class PHOController extends Controller
 		}
 		return $result;
 	}
+	protected function get_Gparam($arr_pa)
+	{
+		$result= array();
+		foreach($arr_pa as $pa){
+			$result[$pa]= $this->request->getQuery($pa);
+		}
+		return $result;
+	}
+	
 	protected function ViewJSON($result){
 		$this->view->disable();
         $this->response->setJsonContent($result);
@@ -47,11 +56,18 @@ class PHOController extends Controller
 			$this->view->setVar($key, $val);
 		}
 	}
-	public function check_login()
+	public function check_loginadmin()
+    {
+        $auth = $this->session->get('auth');
+        if(isset($auth->user_id)==FALSE || $auth->level != 1 ){
+            return $this->response->redirect('loginadm/',TRUE);
+        }
+    }
+    public function check_login()
     {
         $auth = $this->session->get('auth');
         if(isset($auth->user_id)==FALSE){
-            return $this->response->redirect('loginadm/',TRUE);
+            return $this->response->redirect('dang-nhap',TRUE);
         }
     }
     protected function _redirect($url){

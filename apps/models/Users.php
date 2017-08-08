@@ -4,7 +4,7 @@ namespace Multiple\Models;
 use Phalcon\Mvc\Model\Validator\Email as EmailValidator;
 use Phalcon\Mvc\Model\Validator\Uniqueness as UniquenessValidator;
 use Multiple\Models\DBModel;
-
+use Multiple\PHOClass\PhoLog;
 class Users extends DBModel
 {    
     public $user_id;
@@ -21,7 +21,7 @@ class Users extends DBModel
     public $upd_date;
     public $email;
     public $sex;
-
+    public $avata;
     //public $avata;
     public function initialize()
     {
@@ -31,14 +31,35 @@ class Users extends DBModel
         $usr_data = Users::query()->execute();
         return $usr_data;
     }
-    public function get_user($user_no,$pass){        
-		return $user = Users::findFirst(array(
-                "(email = :email: OR user_no = :email:) and pass= :pass:  AND status = 1 ",
-                'bind' => array('email' => $user_no,'pass'=>$this->encodepass($pass))
+    public function get_info($user_id){
+        return Users::findFirst(array(
+            "user_id = :user_id:  ",
+            'bind' => array('user_id' => $user_id)
+        ));
+    }
+    public function get_user($user_no,$pass){     
+       // PhoLog::debug_var('---test---',$user_no);  
+       // PhoLog::debug_var('---test---',$this->encodepass($pass)); 
+		return Users::findFirst(array(
+            "(email = :email: OR user_no = :email:) and pass= :pass:  ",
+            'bind' => array('email' => $user_no,'pass'=>$this->encodepass($pass))
         ));
 	}
+    public function active($email,$id){     
+       // PhoLog::debug_var('---test---',$user_no);  
+        //PhoLog::debug_var('---test---',$this->encodepass($pass)); 
+        $usr = Users::findFirst(array(
+                "email = :email: and user_id= :user_id:  ",
+                'bind' => array('email' => $email,'user_id'=>$id)
+        ));
+        if($usr != false){
+            $usr->status = 1;
+            return $usr->save();
+        }
+        return false;
+    }
     private function encodepass($pass){
-        return md5(PHO_SALT.$pass);
+        return sha1(PHO_SALT.$pass);
     }
 	public function get_row($user_no,$pass){
         $sql="select * from user t
@@ -63,6 +84,7 @@ class Users extends DBModel
         $this->pass = $this->encodepass($param['pass']);
         $this->email =$param['email'];
         $this->sex =$param['sex'];
+        $this->avata ='0.png';
         return $this->save();
     }
     public function get_validation($param){
@@ -74,27 +96,15 @@ class Users extends DBModel
             return true;
         }
         if($user->email == $param['email']){
-            return "Email này đã có, vui lòng nhập mail khác";
+            $res['msg']= "Email này đã có, vui lòng nhập mail khác";
+            $res['code'] = "email";
+            return $res;
         }
         if($user->user_no == $param['user_no']){
-            return "Tên đăng nhập này đã có, vui lòng nhập tên đăng nhập khác";
+            $res['msg'] ="Tên đăng nhập này đã có, vui lòng nhập tên đăng nhập khác";
+            $res['code'] = "userno";
+            return $res;
         }
     }
-    // public function validation()
-    // {
-    //     $this->validate(new EmailValidator(array(
-    //         'field' => 'email'
-    //     )));
-    //     $this->validate(new UniquenessValidator(array(
-    //         'field' => 'email',
-    //         'message' => 'Sorry, The email was registered by another user'
-    //     )));
-    //     $this->validate(new UniquenessValidator(array(
-    //         'field' => 'user_no',
-    //         'message' => 'Sorry, That username is already taken'
-    //     )));
-    //     if ($this->validationHasFailed() == true) {
-    //         return false;
-    //     }
-    // }
+    
 }

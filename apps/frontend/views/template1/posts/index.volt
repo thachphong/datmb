@@ -1,6 +1,6 @@
 <div class="row">
 	<div class="container">
-		{{ partial('includes/post_left') }}
+		{{ partial('includes/user_left') }}
 		<div class="col-md-9 col-sm-12 col-xs-12">
 			<div class="pn_posts">
 				<div class="pn_title">

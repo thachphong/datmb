@@ -21,4 +21,8 @@ class Page extends DBModel
         $sql="select page_id,page_no,page_name from page where del_flg= 0";
         return $this->pho_query($sql);
     }
+    public function get_all(){
+        $sql="select page_id,page_no,page_name,del_flg from page ";
+        return $this->pho_query($sql);
+    }
 }

@@ -19,6 +19,7 @@
 							<div class="col-md-8 col-sm-8 col-xs-12">
 								<input type="text" name="user_no"  value="" id="user_no" required>
 								<label class="lab_red lab_invisible" id="user_no_error">Bạn cần nhập tên đăng nhập !</label>
+								<label class="lab_red lab_invisible" id="user_no_validate">Tên đăng nhập này đã có, vui lòng nhập tên khác !</label>
 							</div>
 						</div>
 						<div class="row row-margin-bottom">
@@ -111,14 +112,22 @@
 		        if(datas.status =="OK"){
 		          //Pho_modal_close("modal1");
 		          //Pho_message_box("Thông báo",'Đăng tin thành công !');
-		          Pho_direct("{{url.get('dang-tin-thanh-cong/')}}" + datas.msg);
+		          Pho_direct("{{url.get('dang-nhap/')}}" + datas.msg);
 		        }else{
-		        	Pho_message_box_error("Lỗi",datas.msg);
+		        	if(datas.code=='email'){ // trung email
+		        		$('#email_validate').text(datas.msg);
+		        		$('#email_validate').show();
+		        	}else if(datas.code =='userno'){ // trung ten dang nhap
+		        		$('#user_no_validate').show();
+		        	}else{
+		        		Pho_message_box_error("Lỗi",datas.msg);
+		        	}		        	
 		        }	                
 	        });
         });
         var check_validate_update = function(){
         	var flg = true;
+        	$('#user_no_validate').hide();
         	$('input:required').each(function(key,item){
         		if($(this).val().trim().length == 0){
         			$('#'+ $(this).attr('id') + "_error").show();
@@ -135,6 +144,7 @@
         	// }
         	if($('#email').val().trim() !=''){
         		if(!validateEmail($('#email').val())){
+        			$('#email_validate').text('Bạn cần nhập đúng định dạng email !');
         			$('#email_validate').show();
         			flg = false;
         		}else{

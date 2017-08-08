@@ -9,7 +9,7 @@ class SlideController extends PHOController
 
     public function initialize()
     {        
-        $this->check_login();
+        $this->check_loginadmin();
     }
 	public function indexAction()
 	{

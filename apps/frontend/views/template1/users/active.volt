@@ -16,7 +16,9 @@
 					<form enctype="multipart/form-data" id="from_post">
 						<div class="row row-margin-bottom" style="text-align: center;">
 							<label class="col-md-12 col-sm-12 col-xs-12 title_col lab_red" id="msg_err"></label>
-							
+							{%if active_msg is defined%}
+							<h3>{{active_msg}}</h3>
+							{%endif%}
 						</div>
 						<div class="row row-margin-bottom">
 							<label class="col-md-4 col-sm-4 col-xs-12 title_col align_right">Tên đăng nhập hoặc mail</label>
@@ -73,13 +75,14 @@
 		        	$('#msg_err').show();
 		        }	                
 	        });
-        }); 
+        });
         $(document).off('keydown','#password'); 
         $(document).on('keydown','#password',function(event){   
         	if ( event.which == 13 ) {
 			   event.preventDefault();
 			   $('#btn_login').click();
 			}  
-        });      	
+        });	
+        	
 	});
 </script>

@@ -3,8 +3,9 @@
 namespace Multiple\Backend\Controllers;
 
 use Multiple\PHOClass\PHOController;
-
-class IndexController extends PHOController
+use Multiple\Models\Page;
+use Multiple\PHOClass\PhoLog;
+class PageController extends PHOController
 {
 
     public function initialize()
@@ -13,8 +14,10 @@ class IndexController extends PHOController
     }
 	public function indexAction()
 	{
+		$model = new Page();
+		$rows['pages'] = $model->get_all();
 		$this->set_template_share();
-		//return $this->response->forward('login');
-       // $this->view->name= 'aaaa';
+		$this->ViewVAR($rows);
 	}
+	
 }
