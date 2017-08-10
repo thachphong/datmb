@@ -75,3 +75,63 @@
         
         </div>
         <!-- /page content -->
+<script>
+  $(document).ready(function() {
+    
+    $(document).off('click','#btn_new'); 
+        $(document).on('click','#btn_new',function(event){
+            location.href="{{url.get('page/edit/0')}}";         
+        });
+        $(document).off('click','.dialog_close'); 
+        $(document).on('click','.dialog_close',function(event){         
+      Pho_modal_close("modal1");
+        });
+        
+        $(document).off('click','.btn_delete'); 
+        $(document).on('click','.btn_delete',function(event){
+          var id = $(this).attr('id');
+            id = id.replace("del_","");
+          var menu_name = $('#name_'+id).text();
+          Pho_message_confirm("Thông báo","Bạn có chắc chắn muốn xóa sản phẩm: ["+menu_name+"] ?",function(){
+            
+        Pho_json_ajax('GET',"{{url.get('page/delete/')}}" + id,null ,function(datas){
+          if(datas.status == "OK"){
+            Pho_direct("{{url.get('page')}}");
+          }else{
+            Pho_message_box_error("Lỗi",datas.msg);
+          }
+                  
+              });
+          });         
+        });
+        
+        $(document).off('click','.btn_edit'); 
+        $(document).on('click','.btn_edit',function(event){
+          var id = $(this).attr('id');
+            id = id.replace("edit_","");  
+            location.href="{{url.get('page/edit/')}}"+id;
+        });
+        
+        
+        $("#table_search").keyup(function(){
+    //hide all the rows
+      //alert('sss');
+            $("#fbody").find("tr").hide();
+
+    //split the current value of searchInput
+            var data = this.value.split(" ");
+    //create a jquery object of the rows
+            var jo = $("#fbody").find("tr");
+            
+    //Recusively filter the jquery object to get results.
+            $.each(data, function(i, v){
+                jo = jo.filter("*:contains('"+v+"')");
+            });
+          //show the rows that match.
+            jo.show();
+       //Removes the placeholder text  
+     
+        });
+        
+    });
+</script>

@@ -218,26 +218,26 @@ class NewsController extends PHOController
 		$news_no = $this->convert_url($param['news_name']);
 		$param['news_no'] = $news_no;	
 		$db = new News();	
-		if(strlen($param['news_id']) == 0){
-			//$sql = "select news_id from news	where news_no = :news_no";
-			$row = $db->get_news_byno($param['news_no'] );
-			//$row = $this->get_ctg_byno($param['page_no']);
-			$i = 0;
-			while($row){
-				$i++;
-				$param['news_no'] = $news_no.'-'.$i;
-				$row = $db->get_news_byno($param['news_no'] );
-			}
-		}else{
-			//$sql = "select news_id from news	where news_no = :news_no	and news_id <> :news_id";
-			$res = $db->get_news_exist($param['news_no'] ,$param['news_id']);
-			$i = 0;
-			while($res){
-				$i++;
-				$param['news_no'] = $news_no.'-'.$i;
-				$res = $db->get_news_exist($param['news_no'] ,$param['news_id']);
-			}
-		}
+		// if(strlen($param['news_id']) == 0){
+		// 	//$sql = "select news_id from news	where news_no = :news_no";
+		// 	$row = $db->get_news_byno($param['news_no'] );
+		// 	//$row = $this->get_ctg_byno($param['page_no']);
+		// 	$i = 0;
+		// 	while($row){
+		// 		$i++;
+		// 		$param['news_no'] = $news_no.'-'.$i;
+		// 		$row = $db->get_news_byno($param['news_no'] );
+		// 	}
+		// }else{
+		// 	//$sql = "select news_id from news	where news_no = :news_no	and news_id <> :news_id";
+		// 	$res = $db->get_news_exist($param['news_no'] ,$param['news_id']);
+		// 	$i = 0;
+		// 	while($res){
+		// 		$i++;
+		// 		$param['news_no'] = $news_no.'-'.$i;
+		// 		$res = $db->get_news_exist($param['news_no'] ,$param['news_id']);
+		// 	}
+		// }
 		return "";
 	}
 	public function deleteAction($news_id)

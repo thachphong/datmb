@@ -46,7 +46,7 @@
                         <tr>
                           <th>STT</th>
                           {%if news_flg != 1%}
-                          <th>Loại bất động sản</th>
+                         <!--  <th>Loại bất động sản</th> -->
                           {%endif%}
                           {%if level_flg == 2%}
                               <th >Danh mục cấp 1</th>    
@@ -65,7 +65,7 @@
                         <tr>
                           <td>{{item['sort']}}</td>
                           {%if news_flg != 1%}
-                          <th>{{item['m_type_name']}}</th>
+                          <!-- <th>item['m_type_name']</th> -->
                           {%endif%} 
                           {%if level_flg == 2%}
                               <td>{{item['ctg_name_1']}}</td>   

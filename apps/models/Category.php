@@ -176,6 +176,7 @@ class Category extends DBModel
                     ,upd_user =:user_id
                     ,sort = :ctg_sort
                     ,m_type_id = :m_type_id
+                    ,parent_id=:parent_id
                     where ctg_id = :ctg_id
                 ";
         
@@ -188,6 +189,7 @@ class Category extends DBModel
                     ,'user_id'
                     ,'del_flg'
                     ,'m_type_id'
+                    ,'parent_id'
                     )));  
         return TRUE;
     }

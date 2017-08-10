@@ -101,11 +101,11 @@ class Elements extends Component
                     
                     if(strlen($item['link'])>0){                        
                         if($item['page_flg']==1){
-                            $href .= 'page/v/';
+                            $href .= 'trang/';
                         }else if($item['page_flg']==2){
-                            $href .= 'danhmuc/ds/';
+                            $href .= 'danhmuc/';
                         }else if($item['page_flg']==3){
-                            $href .= 'tintuc/ds/';
+                            $href .= 'tintuc/';
                         }
                          $href .=$item['link'];
                     }else{
@@ -120,30 +120,30 @@ class Elements extends Component
                             
                             if(strlen($sub1['link'])>0) {                       
                                 if($sub1['page_flg']==1){
-                                    $href .= 'page/v/';
+                                    $href .= 'p/';
                                 }else if($sub1['page_flg']==2){
-                                    $href .= 'danhmuc/ds/';
+                                    $href .= 'danhmuc/';
                                 }else if ($sub1['page_flg']==3){
-                                    $href .= 'tintuc/ds/';
+                                    $href .= 'tintuc/';
                                 }
                                  $href .=$sub1['link'];
                             }else{
-                                $href ='#';
+                               // $href ='#';
                             }
                             $menu_data .='<a href="'.$href.'">'.$sub1['menu_name'].'</a><ul>';
                             foreach($sub1['child'] as $sub2){                            
                                 $href = $base_url;                    
                                 if(strlen($sub2['link'])>0) {                       
                                     if( $sub2['page_flg']==1){
-                                        $href .= 'page/v/';
+                                        $href .= 'p/';
                                     }else if( $sub2['page_flg']==2){
-                                        $href .= 'danhmuc/ds/';
+                                        $href .= 'danhmuc/';
                                     }else if ($sub2['page_flg']==3){
-                                        $href .= 'tintuc/ds/';
+                                        $href .= 'tintuc/';
                                     }
                                      $href .=$sub2['link'];
                                 }else{
-                                    $href ='#';
+                                    //$href ='#';
                                 }                
                                 $menu_data .='<li><a href="'.$href.'">'.$sub2['menu_name'].'</a></li>';
                             }                   
@@ -152,15 +152,15 @@ class Elements extends Component
                             $href = $base_url;                    
                             if(strlen($sub1['link'])>0) {                       
                                 if( $sub1['page_flg']==1){
-                                    $href .= 'page/v/';
+                                    $href .= 'p/';
                                 }else if( $sub1['page_flg']==2){
-                                    $href .= 'danhmuc/ds/';
+                                    $href .= 'danhmuc/';
                                 }else if ($sub1['page_flg']==3){
-                                    $href .= 'tintuc/ds/';
+                                    $href .= 'tintuc/';
                                 }
                                  $href .=$sub1['link'];
                             }else{
-                                $href ='#';
+                                //$href ='#';
                             }                
                             $menu_data .='<li><a href="'.$href.'">'.$sub1['menu_name'].'</a></li>';
                         }              
@@ -170,15 +170,15 @@ class Elements extends Component
                     $href = $base_url;                    
                     if(strlen($item['link'])>0){                        
                         if( $item['page_flg']==1){
-                            $href .= 'page/v/';
+                            $href .= 'p/';
                         }else if( $item['page_flg']==2){
-                            $href .= 'danhmuc/ds/';
+                            $href .= 'danhmuc/';
                         }else if ($item['page_flg']==3){
-                            $href .= 'tintuc/ds/';
+                            $href .= 'tintuc/';
                         }
                          $href .=$item['link'];
                     }else{
-                        $href ='#';
+                        //$href ='#';
                     }                
                     $menu_data .='<li><a href="'.$href.'">'.$item['menu_name'].'</a></li>';
                 }        
