@@ -3,6 +3,10 @@ use Phalcon\Mvc\Url;
 use Phalcon\Mvc\User\Component;
 use Multiple\Models\Message;
 use Multiple\Models\Menu;
+use Multiple\Models\News;
+use Multiple\Models\Posts;
+use Phalcon\Cache\Backend\File as BackFile;
+use Phalcon\Cache\Frontend\Data as FrontData;
 /**
  * Elements
  *
@@ -101,11 +105,11 @@ class Elements extends Component
                     
                     if(strlen($item['link'])>0){                        
                         if($item['page_flg']==1){
-                            $href .= 'trang/';
+                            $href .= 'p/';
                         }else if($item['page_flg']==2){
-                            $href .= 'danhmuc/';
+                            $href .= 'c/';
                         }else if($item['page_flg']==3){
-                            $href .= 'tintuc/';
+                            $href .= 't/';
                         }
                          $href .=$item['link'];
                     }else{
@@ -122,9 +126,9 @@ class Elements extends Component
                                 if($sub1['page_flg']==1){
                                     $href .= 'p/';
                                 }else if($sub1['page_flg']==2){
-                                    $href .= 'danhmuc/';
+                                    $href .= 'c/';
                                 }else if ($sub1['page_flg']==3){
-                                    $href .= 'tintuc/';
+                                    $href .= 't/';
                                 }
                                  $href .=$sub1['link'];
                             }else{
@@ -137,9 +141,9 @@ class Elements extends Component
                                     if( $sub2['page_flg']==1){
                                         $href .= 'p/';
                                     }else if( $sub2['page_flg']==2){
-                                        $href .= 'danhmuc/';
+                                        $href .= 'c/';
                                     }else if ($sub2['page_flg']==3){
-                                        $href .= 'tintuc/';
+                                        $href .= 't/';
                                     }
                                      $href .=$sub2['link'];
                                 }else{
@@ -154,9 +158,9 @@ class Elements extends Component
                                 if( $sub1['page_flg']==1){
                                     $href .= 'p/';
                                 }else if( $sub1['page_flg']==2){
-                                    $href .= 'danhmuc/';
+                                    $href .= 'c/';
                                 }else if ($sub1['page_flg']==3){
-                                    $href .= 'tintuc/';
+                                    $href .= 't/';
                                 }
                                  $href .=$sub1['link'];
                             }else{
@@ -172,11 +176,11 @@ class Elements extends Component
                         if( $item['page_flg']==1){
                             $href .= 'p/';
                         }else if( $item['page_flg']==2){
-                            $href .= 'danhmuc/';
+                            $href .= 'c/';
                         }else if ($item['page_flg']==3){
-                            $href .= 'tintuc/';
+                            $href .= 't/';
                         }
-                         $href .=$item['link'];
+                        $href .=$item['link'];
                     }else{
                         //$href ='#';
                     }                
@@ -192,100 +196,58 @@ class Elements extends Component
     }
     public function getuser(){
         return $this->session->get('auth');
-    }
-	public function getAdminMenu(){
-		
-        $auth = $this->session->get('auth');
-        if ($auth) {
-            $this->_adminMenu['navbar-right']['useradm'] = array(
-                'caption' => 'Log Out',
-                'action' => 'logout' 
-            );
-        } else {
-            unset($this->_adminMenu['navbar-left']['invoices']);
-        }
-        $controllerName = $this->view->getControllerName();
-        echo '<div class="collapse navbar-collapse">';
-        echo '<div class="navbar-header">    <a class="navbar-brand" href="#">Admin</a>    </div>';
-        foreach ($this->_adminMenu as $position => $menu) {            
-            echo '<ul class="nav navbar-nav ', $position, '">';
-            foreach ($menu as $controller => $option) {
-                if($option['action']=='logout'){
-                    echo '<li class="dropdown">';
-                    echo '<a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">Xin Chào '.$auth['name'].'<span class="caret"></span>
-</a>';
-                    echo '<ul class="dropdown-menu">';
-                    echo '<li>'.$this->tag->linkTo( 'useradm/edit' , 'Thông tin cá nhân').'</li>';    
-                    echo '<li>'.$this->tag->linkTo('useradm/logout', 'Thoát').'</li>';                       
-                    echo '</ul></li>';
-                }else{
-                    if ($controllerName == $controller) {
-                        echo '<li class="active">';
-                    } else {
-                        echo '<li>';
-                    }
-                    echo $this->tag->linkTo($controller . '/' . $option['action'], $option['caption']);
-                    echo '</li>';
-                }
-            }
-            echo '</ul>';
-        }
-        echo '</div>';
-        /*echo '<nav class="navbar navbar-inverse navbar-fixed-top">
-      <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="#">Bootstrap theme</a>
-        </div>
-        <div id="navbar" class="navbar-collapse collapse">
-          <ul class="nav navbar-nav">
-            <li class="active"><a href="#">Home</a></li>
-            <li><a href="#about">About</a></li>
-            <li><a href="#contact">Contact</a></li>
-            <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
-              <ul class="dropdown-menu">
-                <li><a href="#">Action</a></li>
-                <li><a href="#">Another action</a></li>
-                <li><a href="#">Something else here</a></li>
-                <li role="separator" class="divider"></li>
-                <li class="dropdown-header">Nav header</li>
-                <li><a href="#">Separated link</a></li>
-                <li><a href="#">One more separated link</a></li>
-              </ul>
-            </li>
-          </ul>
-        </div><!--/.nav-collapse -->
-      </div>
-    </nav>';*/
-	}
+    }	
     /**
      * Returns menu tabs
      */
-    public function getNewPost()
-    {
-    	/*$db = new Posts();
-    	$data = $db->get_new(6);*/
-    	$cacheKey = 'newpost.cache';
-		$html  = $this->dataCache->get($cacheKey);
+    public function getTinxemnhieu()
+    {    	
+        $options = ['lifetime' => 300 ]; // thoi gian tinh bang giay 300:5phut       
+        $frontendCache = new FrontData($options);   
+        $cache = new BackFile( $frontendCache,  ['cacheDir' => PHO_CACHE_DIR ]);
+    	$cacheKey = 'tinxemnhieu.cache';
+		$html  = $cache->get($cacheKey);
+
 		if ($html === null) {
-	    	$data = $this->db->fetchAll("SELECT t.* from posts t where status=1 order by id desc limit 6 ", Phalcon\Db::FETCH_ASSOC);
+            $ne = new News();
+            $data = $ne->get_news_pupular(5);	    	
 	    	$html = '';
-	    	foreach($data as $key=>$post){
-				$html .= '<li>';
-			    $html .= '<span class="number">'.($key+1).'</span>';                	
-			    $html .= '<a class="bold" href="'.$this->url->get('n/'.$post['id'].'/'.$post['caption_url']).'" title="'.$post['caption'].'">'.$post['caption'].'</a>';
-			    $html .= '</li>';
+	    	foreach($data as $key=>$item){
+				$html .= '<li> <i class="fa fa-circle"></i><a href="'.BASE_URL_NAME.$item['news_no'].'_'.$item['news_id'].'">';
+                $html .=$item['news_name'].'</a></li>';
+                if ($key < count($data)-1){
+                    $html .='<hr class="row_line" />';
+                }  
 			}
 			// Store it in the cache
-		    $this->dataCache->save($cacheKey, $html);
+		    $cache->save($cacheKey, $html);
 		}
 		echo $html;
+    }
+    public function getTindacbiet()
+    { 
+        $options = ['lifetime' => 300 ]; // thoi gian tinh bang giay 
+        $frontendCache = new FrontData($options);   
+        $cache = new BackFile( $frontendCache,  ['cacheDir' => PHO_CACHE_DIR ]);
+
+        $cacheKey = 'tindatbiet.cache';
+        $html  = $cache->get($cacheKey);
+        if ($html === null) {
+            $db = new Posts();  
+            $data = $db->get_list_new(3);      //type sieu vip      
+            $html = '';
+            foreach($data as $key=>$item){
+                $html .= '<div class="vipitem pn_background pn_border">';
+                $html .= '<img src="'.BASE_URL_NAME.'crop/50x50/'.$item['img_path'].'"><div>';
+                $html .= '<a href="'.BASE_URL_NAME.$item['post_no'].'_'.$item['post_id'].'">'.$item['post_name'].'</a>';
+                $html .= '<div style="text-align:right">';
+                $html .= '<span><strong>'.$item['price'].'</strong>'. $item['m_unit_name'].'</span>';
+                $html .= '</div></div></div>';               
+            }
+            // Store it in the cache
+            $cache->save($cacheKey, $html);
+        }
+        echo $html;
     }
     public function getTopPost()
     {

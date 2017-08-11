@@ -1,3 +1,9 @@
+<style type="text/css">
+.optionGroup{
+    font-weight: bold;
+    font-style: italic;
+}
+</style>
 <div class="row" style="width: 700px">
               <div class="col-md-12 col-sm-12 col-xs-12">
                 
@@ -134,11 +140,19 @@
           //console.log(val);
           if(val == "2"){
             $.each( ctg_list, function( key, value ) {
+              var grpclass ="";
+              var space ="";
+              if(value.cnt_child > 0){
+                  grpclass='class="optionGroup"';
+              }
+              if(value.ctg_level == 2){
+                  space ="&nbsp;&nbsp;&nbsp;";
+              }
               if(v_link_val.length > 0 && value.ctg_no == v_link_val){
                 //console.log(v_link_val);
-                str_opt += '<option value="'+value.ctg_no+'" selected="selected">'+value.ctg_name + "</option>";
+                str_opt += '<option '+grpclass+' value="'+value.ctg_no+'" selected="selected">'+space+value.ctg_name + "</option>";
               }else{
-                str_opt += '<option value="'+value.ctg_no+'">'+value.ctg_name + "</option>";
+                str_opt += '<option '+grpclass+' value="'+value.ctg_no+'">'+space+value.ctg_name + "</option>";
               }         
           
         });

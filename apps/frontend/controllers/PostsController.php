@@ -214,9 +214,11 @@ class PostsController extends PHOController
 	}
 	public function viewAction($id)
 	{
-		$url =  $this->request->getURI();
-        $abc =1;
+		//$url =  $this->request->getURI();
+        //$abc =1;
        // $post_data= Posts::findFirst
+        $this->set_template_share();
+		//$this->ViewVAR($result);
 	}
 	public function successAction($post_id){
 		$db = new Posts();
@@ -263,7 +265,7 @@ class PostsController extends PHOController
 		}
 		foreach($filelist as $item){
 			$name = $item['name'];
-			if($item['size'] > 4000000) // >4MB
+			if($item['size'] > 4096000) // >4MB
 			{
 				$result['status']='NOT';
 				$result['msg']='File upload không được lớn 4MB !';
@@ -280,4 +282,5 @@ class PostsController extends PHOController
 		
 		return $this->ViewJSON($result);
 	}
+	
 }

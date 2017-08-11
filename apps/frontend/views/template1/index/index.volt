@@ -12,7 +12,7 @@
                {%for item in newlist%}
                   <div class="row margin_top pn_background pn_border">
                      <div class="col-md-3 col-sm-3 col-xs-12 post_img">
-                        <img src="{{url.get('crop/176x118/')}}{{item['img_path']}}" class="img_newlist">
+                        <img src="{%if item['img_path']|length ==0%}{{url.get('crop/176x118/template1/images/post0.png')}}{%else%}{{url.get('crop/176x118/')}}{{item['img_path']}}{%endif%}" class="img_newlist">
                      </div>
                      <div class="col-md-9 col-sm-9 col-xs-12">
                         <a href="{{url.get(item['post_no'])}}{{item['post_id']}}" class="post_title">{{item['post_name']}}</a>

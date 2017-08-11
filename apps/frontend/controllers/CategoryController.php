@@ -1,47 +1,56 @@
 <?php
 
 namespace Multiple\Frontend\Controllers;
-
-use Phalcon\Mvc\Controller;
+use Multiple\PHOClass\PHOController;
+//use Phalcon\Mvc\Controller;
 use Multiple\Models\Posts;
-use Multiple\Models\Tags;
+use Multiple\Models\Category;
 use Multiple\Models\Menu;
-class CategoryController extends Controller
+class CategoryController extends PHOController
 {
 
-	public function indexAction($ctg_no,$page=1)
-	{
-      
-      	$db = new Posts();
-      	
-        $request = $_REQUEST;
-        $rowtop = 6;
-       // $page = 1;
-        $total = 20 ;
-        $totalpage = 1;
-        
-        
-        $from = ($page-1)*$total;
-        $to = $page*$total;
-        
-        $menu = Menu::findFirst(array("no = :no:  AND status = 1 ",'bind' => array('no' => $ctg_no) ));
-        $db_menu = new Menu();
-        $list_id = $db_menu->get_all_child($ctg_no);
-        if($list_id == NULL){
-			$list_id= $menu->id;
-		}
-        $totalrow = $db->get_totalrow($list_id);
-        $totalpage = ceil(($totalrow - $rowtop) /$total);
-        
-        $datatop = $db->get_by_menu($list_id,$rowtop,0);
-        $datadetail = $db->get_by_menu($list_id,$total,$from + $rowtop);
-        $this->view->title = $menu->title;
-        $this->view->page_no = $ctg_no;
-        $this->view->menu_id = $menu->id;
-        $this->view->datatop= $datatop;
-        $this->view->datadetail= $datadetail;
-        $this->view->page = $page;
-        $this->view->totalpage= $totalpage;
+	public function indexAction($ctg_no)
+	{      
+        $page=1;
+      	$param = $this->get_Gparam(array('page'));   
+        if(isset($param['page']) && strlen($param['page']) > 0){
+            $page=$param['page'];
+        }
+        $db = new Posts();
+        $ctg = new Category();
+        $start_row = 0;
+        if( $page > 1){
+            $start_row = ( $page-1)*PAGE_LIMIT_RECORD ;
+        }
+
+        $param['page'] = $page;
+        $info = $ctg->get_ctg_byno($ctg_no);
+        $param['ctg_name'] = $info->ctg_name;
+        $param['post']=$db->get_post_byctgno($ctg_no,$start_row);
+        $param['total_post'] = $db->get_post_byctgno_count($ctg_no);
+        $param['total_page']= round($param['total_post']/PAGE_LIMIT_RECORD);
+        $param['ctg_no'] = $ctg_no;
+        $start = $page - 2;
+        $end = $page + 2;
+        if($page < 3){
+            $start = 1;
+            $end = $start + 4;
+            if($end > $param['total_page']){
+               $end = $param['total_page'];
+            }
+        }
+        if($param['total_page']< $page + 2 ){
+            $end = $param['total_page'];
+            $start = $param['total_page'] - 4;
+            if($start < 1){
+               $start = 1;
+            }
+        }
+        $param['start'] = $start;
+        $param['end'] = $end;
+       
+        $this->set_template_share();
+        $this->ViewVAR($param);
 	}
 	public function tagAction($tag_no,$page=1)
 	{

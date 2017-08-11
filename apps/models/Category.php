@@ -89,6 +89,12 @@ class Category extends DBModel
         else
             return null;
     }
+    // public function get_category($ctg_no){
+    //     return  Page::findFirst(array(
+    //         "del_flg = 0 and ctg_no =:ctg_no:",
+    //         'bind' => array('ctg_no'=>$ctg_no)
+    //     ));       
+    // }
     public function _insert($param)
     {
         //$this->begin_transaction();
