@@ -52,7 +52,7 @@ class PostsController extends PHOController
 			  $result['street_width']='';
 			  $result['facade_width']='';
 			  $result['m_directional_id']='';
-			$result['post_level']='3';		
+			$result['post_level']='3';	// tin sieu vip	
 			$result['full_name']='';
 			$result['contract_address']='';
 			$result['phone']='';
@@ -212,14 +212,7 @@ class PostsController extends PHOController
 		$param['post_no'] = $this->convert_url($param['post_name']);
 		return "";
 	}
-	public function viewAction($id)
-	{
-		//$url =  $this->request->getURI();
-        //$abc =1;
-       // $post_data= Posts::findFirst
-        $this->set_template_share();
-		//$this->ViewVAR($result);
-	}
+	
 	public function successAction($post_id){
 		$db = new Posts();
 		$po = $db->get_info($post_id);
@@ -228,25 +221,7 @@ class PostsController extends PHOController
 		$this->set_template_share();
 		$this->ViewVAR($result);	
 	}
-	public function get_client_ip_server() {
-	    $ipaddress = '';
-	    if ($_SERVER['HTTP_CLIENT_IP'])
-	        $ipaddress = $_SERVER['HTTP_CLIENT_IP'];
-	    else if($_SERVER['HTTP_X_FORWARDED_FOR'])
-	        $ipaddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
-	    else if($_SERVER['HTTP_X_FORWARDED'])
-	        $ipaddress = $_SERVER['HTTP_X_FORWARDED'];
-	    else if($_SERVER['HTTP_FORWARDED_FOR'])
-	        $ipaddress = $_SERVER['HTTP_FORWARDED_FOR'];
-	    else if($_SERVER['HTTP_FORWARDED'])
-	        $ipaddress = $_SERVER['HTTP_FORWARDED'];
-	    else if($_SERVER['REMOTE_ADDR'])
-	        $ipaddress = $_SERVER['REMOTE_ADDR'];
-	    else
-	        $ipaddress = 'UNKNOWN';
-	 
-	    return $ipaddress;
-	}
+	
 	public function uploadAction(){
 		$filelist = $_FILES;
 		$param = $this->get_param(array('folder_tmp'));

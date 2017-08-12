@@ -2,12 +2,12 @@
 
 namespace Multiple\Frontend\Controllers;
 
-use Phalcon\Mvc\Controller;
+use Multiple\PHOClass\PHOController;
 use Multiple\Models\Posts;
 use Multiple\Models\Tags;
 use Multiple\Models\CheckView;
 
-class NewsController extends Controller
+class NewsController extends PHOController
 {
 
 	public function indexAction($id)
@@ -48,23 +48,5 @@ class NewsController extends Controller
         $abc =1;
        // $post_data= Posts::findFirst
 	}
-	function get_client_ip_server() {
-	    $ipaddress = '';
-	    if ($_SERVER['HTTP_CLIENT_IP'])
-	        $ipaddress = $_SERVER['HTTP_CLIENT_IP'];
-	    else if($_SERVER['HTTP_X_FORWARDED_FOR'])
-	        $ipaddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
-	    else if($_SERVER['HTTP_X_FORWARDED'])
-	        $ipaddress = $_SERVER['HTTP_X_FORWARDED'];
-	    else if($_SERVER['HTTP_FORWARDED_FOR'])
-	        $ipaddress = $_SERVER['HTTP_FORWARDED_FOR'];
-	    else if($_SERVER['HTTP_FORWARDED'])
-	        $ipaddress = $_SERVER['HTTP_FORWARDED'];
-	    else if($_SERVER['REMOTE_ADDR'])
-	        $ipaddress = $_SERVER['REMOTE_ADDR'];
-	    else
-	        $ipaddress = 'UNKNOWN';
-	 
-	    return $ipaddress;
-	}
+	
 }

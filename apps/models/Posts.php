@@ -224,4 +224,50 @@ class Posts extends DBModel
 		$res = $this->query_first($sql,array('ctg_no'=>$ctg_no));
 		return $res['cnt'];
 	}
+	public function get_vpost($post_id){
+		$sql="select p.post_id,p.post_name,p.post_no,
+				  ctg.ctg_name,
+					ctg.ctg_id,
+					ctg.ctg_no,
+				  p.m_type_id,
+				  p.status,
+				  mp.m_provin_name,
+				  md.m_district_name,
+				  mw.m_ward_name,
+				  p.price,
+				  mu.m_unit_name,
+				  p.acreage,
+				  p.address,
+				  p.content,  
+				  p.del_flg,
+				  p.toilet_num,
+				  p.room_num,
+				  p.floor_num,
+				  p.street_width,
+				  p.facade_width,
+				  di.m_directional_name,
+				 v.post_level,				
+				 DATE_FORMAT(v.end_date ,'%d/%m/%Y')  end_date,
+				 DATE_FORMAT(v.start_date ,'%d/%m/%Y')  start_date,	
+				 V.post_view_id,
+				c.post_contract_id,		
+				c.full_name,
+				c.address contract_address,
+				c.phone,
+				c.mobie,
+				c.email
+				from posts p
+				INNER JOIN category ctg on ctg.ctg_id = p.ctg_id
+				INNER JOIN posts_view v on v.post_id = p.post_id
+				INNER JOIN posts_contract c on c.post_id = p.post_id
+				INNER JOIN m_provincial mp on mp.m_provin_id = p.m_provin_id
+				INNER JOIN m_district md on md.m_district_id = p.m_district_id
+				LEFT JOIN m_ward mw on mw.m_ward_id = p.m_ward_id
+				LEFT JOIN m_unit mu on mu.m_unit_id = p.unit_price
+				LEFT JOIN m_directional di on di.m_directional_id = p.m_directional_id 			
+				
+				where p.post_id = :post_id 
+				and p.del_flg = 0";
+		return $this->query_first($sql,array('post_id'=>$post_id));
+	}
 }

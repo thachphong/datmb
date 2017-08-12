@@ -204,6 +204,61 @@
 						</div>
 						<hr/>
 						<div>
+							<h3>Thông tin bản đồ</h3>
+						</div>
+						<div class="row row-margin-bottom" >
+
+							<input type="text" class="form-control" name="maps_address" id="maps_address" value="" placeholder="Nhập tên địa điểm cần tìm">
+							<div id="maps_maparea">
+						      <div id="maps_mapcanvas" style="margin-top:10px;" class="form-group"></div>
+						      <div class="row">
+						          <div class="col-xs-6">
+						            <div class="form-group">
+						              <div class="input-group">
+						                  <span class="input-group-addon">L</span>
+						                  <input type="text" class="form-control" name="maps[maps_mapcenterlat]" id="maps_mapcenterlat" value="" readonly="readonly">
+						              </div>
+						            </div>
+						          </div>
+						          <div class="col-xs-6">
+						            <div class="form-group">
+						              <div class="input-group">
+						                  <span class="input-group-addon">N</span>
+						                  <input type="text" class="form-control" name="maps[maps_mapcenterlng]" id="maps_mapcenterlng" value="" readonly="readonly">
+						              </div>
+						             </div>
+						          </div>
+						          <div class="col-xs-6">
+						            <div class="form-group">
+						              <div class="input-group">
+						                  <span class="input-group-addon">L</span>
+						                  <input type="text" class="form-control" name="maps[maps_maplat]" id="maps_maplat" value="" readonly="readonly">
+						              </div>
+						             </div>
+						          </div>
+						          <div class="col-xs-6">
+						            <div class="form-group">
+						              <div class="input-group">
+						                  <span class="input-group-addon">N</span>
+						                  <input type="text" class="form-control" name="maps[maps_maplng]" id="maps_maplng" value="" readonly="readonly">
+						              </div>
+						              </div>
+						          </div>
+						      </div>
+						      <div class="row">
+						          <div class="col-xs-12">
+						            <div class="form-group">
+						              <div class="input-group">
+						                  <span class="input-group-addon">Z</span>
+						                  <input type="text" class="form-control" name="maps[maps_mapzoom]" id="maps_mapzoom" value="" readonly="readonly">
+						              </div>
+						             </div>
+						          </div>
+						      </div>
+						  </div>
+						</div>
+						<hr/>
+						<div>
 							<h3>Thông tin liên hệ</h3>
 						</div>
 						<div class="row row-margin-bottom">
@@ -247,28 +302,28 @@
 							<div class="col-md-2 col-sm-2 col-xs-12">
 								<label class="control control-radio">
 							        Tin siêu vip
-							        <input type="radio" name="view[post_level]" {%if m_type_id ==3%}checked="checked"{%endif%} value="3" />
+							        <input type="radio" name="view[post_level]" {%if post_level ==3%}checked="checked"{%endif%} value="3" />
 							        <div class="control_indicator"></div>
 							    </label>
 							</div>
 							<div class="col-md-2 col-sm-2 col-xs-12">
 								<label class="control control-radio">
 							        Tin vip
-							        <input type="radio" name="view[post_level]" value="2" {%if m_type_id ==2%}checked="checked"{%endif%}/>
+							        <input type="radio" name="view[post_level]" value="2" {%if post_level ==2%}checked="checked"{%endif%}/>
 							        <div class="control_indicator"></div>
 							    </label>
 							</div>
 							<div class="col-md-2 col-sm-2 col-xs-12">
 								<label class="control control-radio">
 							        Tin hot
-							        <input type="radio" name="view[post_level]" value="1" {%if m_type_id ==1%}checked="checked"{%endif%}/>
+							        <input type="radio" name="view[post_level]" value="1" {%if post_level ==1%}checked="checked"{%endif%}/>
 							        <div class="control_indicator"></div>
 							    </label>
 							</div>
 							<div class="col-md-2 col-sm-2 col-xs-12">
 								<label class="control control-radio">
 							        Tin thường
-							        <input type="radio" name="view[post_level]" value="0" {%if m_type_id ==0%}checked="checked"{%endif%}/>
+							        <input type="radio" name="view[post_level]" value="0" {%if post_level ==0%}checked="checked"{%endif%}/>
 							        <div class="control_indicator"></div>
 							    </label>
 							</div>												
@@ -530,4 +585,152 @@
             });
         });
 	});
+var map, ele, mapH, mapW, addEle, mapL, mapN, mapZ;
+
+ele = 'maps_mapcanvas';
+addEle = 'maps_address';
+mapLat = 'maps_maplat';
+mapLng = 'maps_maplng';
+mapZ = 'maps_mapzoom';
+mapArea = 'maps_maparea';
+mapCenLat = 'maps_mapcenterlat';
+mapCenLng = 'maps_mapcenterlng';
+
+// Call Google MAP API
+if( ! document.getElementById('googleMapAPI') ){
+	var s = document.createElement('script');
+	s.type = 'text/javascript';
+	s.id = 'googleMapAPI';
+	s.src = 'https://maps.googleapis.com/maps/api/js?v=3.exp&key=AIzaSyAbkqq1po0p6Z1rnpQSSlO4x32JrdnedY0&sensor=false&libraries=places&callback=controlMap';
+	document.body.appendChild(s);
+}else{
+	controlMap();
+}
+
+// Creat map and map tools
+function initializeMap(){
+	
+	var zoom = parseInt($("#" + mapZ).val()), lat = parseFloat($("#" + mapLat).val()), lng = parseFloat($("#" + mapLng).val()), Clat = parseFloat($("#" + mapCenLat).val()), Clng = parseFloat($("#" + mapCenLng).val());
+	Clat || (Clat = 20.984516000000013, $("#" + mapCenLat).val(Clat));
+	Clng || (Clng = 105.79547500000001, $("#" + mapCenLng).val(Clng));
+	lat || (lat = Clat, $("#" + mapLat).val(lat));
+	lng || (lng = Clng, $("#" + mapLng).val(lng));
+	zoom || (zoom = 17, $("#" + mapZ).val(zoom));
+	
+	mapW = $('#' + ele).innerWidth();
+	mapH = mapW * 3 / 4;
+	
+	// Init MAP
+	$('#' + ele).width(mapW).height(mapH > 500 ? 500 : mapH);
+	map = new google.maps.Map(document.getElementById(ele),{
+		zoom: zoom,
+		scrollwheel: false,
+		center: {
+			lat: Clat,
+			lng: Clng
+		}
+	});
+	
+	// Init default marker
+	var markers = [];
+	markers[0] = new google.maps.Marker({
+        map: map,
+        position: new google.maps.LatLng(lat,lng),
+        draggable: true,
+        animation: google.maps.Animation.DROP
+    });
+    markerdragEvent(markers);
+    	// Init search box
+    //duong + phuong + tinh + huyen 
+	var searchBox = new google.maps.places.SearchBox(document.getElementById(addEle));
+
+	google.maps.event.addListener(searchBox, 'places_changed', function(){
+	    var places = searchBox.getPlaces();
+
+	    if (places.length == 0) {
+	        return;
+	    }
+
+	    for (var i = 0, marker; marker = markers[i]; i++) {
+	        marker.setMap(null);
+	    }
+
+	    markers = [];
+	    var bounds = new google.maps.LatLngBounds();
+	    for (var i = 0, place; place = places[i]; i++) {
+	        var marker = new google.maps.Marker({
+		        map: map,
+		        position: place.geometry.location,
+		        draggable: true,
+		        animation: google.maps.Animation.DROP
+	        });
+	        var infowindow = new google.maps.InfoWindow({
+	          content: 'Địa chỉ: 123'
+	        });
+	         google.maps.event.addListener(marker, 'click', function() {
+		      infowindow.open(map,marker);
+		    });
+	        // marker.addListener('dragstart', function() {
+	        //   infowindow.open(map, marker);
+	        // });
+	        markers.push(marker);
+	        bounds.extend(place.geometry.location);
+	    }
+	    
+        markerdragEvent(markers);
+	    map.fitBounds(bounds);
+		console.log( places );
+	});
+
+	// Add marker when click on map
+	google.maps.event.addListener(map, 'click', function(e) {
+	    for (var i = 0, marker; marker = markers[i]; i++) {
+	        marker.setMap(null);
+	    }
+
+	    markers = [];
+		markers[0] = new google.maps.Marker({
+	        map: map,
+	        position: new google.maps.LatLng(e.latLng.lat(), e.latLng.lng()),
+	        draggable: true,
+	        animation: google.maps.Animation.DROP
+	    });
+
+	    markerdragEvent(markers);
+	});
+
+	// Event on zoom map
+	google.maps.event.addListener(map, 'zoom_changed', function() {
+	    $("#" + mapZ).val(map.getZoom());
+	});
+
+	// Event on change center map
+	google.maps.event.addListener(map, 'center_changed', function() {
+	    $("#" + mapCenLat).val(map.getCenter().lat());
+	    $("#" + mapCenLng).val(map.getCenter().lng());
+	    console.log( map.getCenter() );
+	});
+}
+
+// Show, hide map on select change
+function controlMap(manual){
+	$('#' + mapArea).slideDown(100, function(){
+		initializeMap();
+	});
+
+	return !1;
+}
+
+// Map Marker drag event
+function markerdragEvent(markers){
+    for (var i = 0, marker; marker = markers[i]; i++) {
+	    $("#" + mapLat).val(marker.position.lat());
+	    $("#" + mapLng).val(marker.position.lng());
+
+		google.maps.event.addListener(marker, 'drag', function(e) {
+		    $("#" + mapLat).val(e.latLng.lat());
+		    $("#" + mapLng).val(e.latLng.lng());
+		});
+    }
+}
 </script>
