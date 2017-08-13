@@ -20,19 +20,7 @@ class Elements extends Component
             'index' => array(
                 'caption' => 'Home',
                 'action' => 'index'
-            ),
-           /* 'invoices' => array(
-                'caption' => 'Invoices',
-                'action' => 'index'
-            ),
-            'about' => array(
-                'caption' => 'About',
-                'action' => 'index'
-            ),
-            'contact' => array(
-                'caption' => 'Contact',
-                'action' => 'index'
-            */
+            ),           
             'approval' => array(
                 'caption' => 'Duyệt bài',
                 'action' => ''
@@ -109,7 +97,7 @@ class Elements extends Component
                         }else if($item['page_flg']==2){
                             $href .= 'c/';
                         }else if($item['page_flg']==3){
-                            $href .= 't/';
+                            $href .= 'dm/';
                         }
                          $href .=$item['link'];
                     }else{
@@ -128,7 +116,7 @@ class Elements extends Component
                                 }else if($sub1['page_flg']==2){
                                     $href .= 'c/';
                                 }else if ($sub1['page_flg']==3){
-                                    $href .= 't/';
+                                    $href .= 'dm/';
                                 }
                                  $href .=$sub1['link'];
                             }else{
@@ -143,7 +131,7 @@ class Elements extends Component
                                     }else if( $sub2['page_flg']==2){
                                         $href .= 'c/';
                                     }else if ($sub2['page_flg']==3){
-                                        $href .= 't/';
+                                        $href .= 'dm/';
                                     }
                                      $href .=$sub2['link'];
                                 }else{
@@ -160,7 +148,7 @@ class Elements extends Component
                                 }else if( $sub1['page_flg']==2){
                                     $href .= 'c/';
                                 }else if ($sub1['page_flg']==3){
-                                    $href .= 't/';
+                                    $href .= 'dm/';
                                 }
                                  $href .=$sub1['link'];
                             }else{
@@ -178,7 +166,7 @@ class Elements extends Component
                         }else if( $item['page_flg']==2){
                             $href .= 'c/';
                         }else if ($item['page_flg']==3){
-                            $href .= 't/';
+                            $href .= 'dm/';
                         }
                         $href .=$item['link'];
                     }else{
@@ -238,10 +226,15 @@ class Elements extends Component
             $html = '';
             foreach($data as $key=>$item){
                 $html .= '<div class="vipitem pn_background pn_border">';
-                $html .= '<img src="'.BASE_URL_NAME.'crop/50x50/'.$item['img_path'].'"><div>';
+                if(strlen($item['img_path'])>0){
+                    $html .= '<img src="'.BASE_URL_NAME.'crop/60x50/'.$item['img_path'].'"><div>';
+                }else{
+                    $html .= '<img src="'.BASE_URL_NAME.'template1/images/post1.png"><div>';
+                }
+                
                 $html .= '<a href="'.BASE_URL_NAME.$item['post_no'].'_'.$item['post_id'].'">'.$item['post_name'].'</a>';
                 $html .= '<div style="text-align:right">';
-                $html .= '<span><strong>'.$item['price'].'</strong>'. $item['m_unit_name'].'</span>';
+                $html .= '<span class="postprice_right"><strong>'.$item['price'].'</strong>'. $item['m_unit_name'].'</span>';
                 $html .= '</div></div></div>';               
             }
             // Store it in the cache

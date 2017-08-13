@@ -3,6 +3,8 @@
 namespace Multiple\PHOClass;
 
 use Phalcon\Mvc\Controller;
+use Phalcon\Cache\Backend\File as BackFile;
+use Phalcon\Cache\Frontend\Data as FrontData;
 
 class PHOController extends Controller
 {
@@ -55,6 +57,11 @@ class PHOController extends Controller
 		foreach($result as $key => $val){
 			$this->view->setVar($key, $val);
 		}
+	}
+	protected function createCache($options){
+		$frontendCache = new FrontData($options); 	
+ 		$cache = new BackFile( $frontendCache,  ['cacheDir' => PHO_CACHE_DIR ]);
+ 		return $cache;
 	}
 	public function check_loginadmin()
     {

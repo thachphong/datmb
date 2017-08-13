@@ -208,10 +208,10 @@
 						</div>
 						<div class="row row-margin-bottom" >
 
-							<input type="text" class="form-control" name="maps_address" id="maps_address" value="" placeholder="Nhập tên địa điểm cần tìm">
+							<!--<input type="text" class="form-control" name="maps_address" id="maps_address" value="" placeholder="Nhập tên địa điểm cần tìm" style="display:block">
 							<div id="maps_maparea">
 						      <div id="maps_mapcanvas" style="margin-top:10px;" class="form-group"></div>
-						      <div class="row">
+						      <div class="row" style="display:none">
 						          <div class="col-xs-6">
 						            <div class="form-group">
 						              <div class="input-group">
@@ -245,7 +245,7 @@
 						              </div>
 						          </div>
 						      </div>
-						      <div class="row">
+						      <div class="row" style="display:none">
 						          <div class="col-xs-12">
 						            <div class="form-group">
 						              <div class="input-group">
@@ -255,7 +255,19 @@
 						             </div>
 						          </div>
 						      </div>
-						  </div>
+						  </div>-->
+						  <input type="hidden" name="ctl00$ContentPlaceHolder1$PostNews$hddLatitude" id="hddLatitude" value="21.02894860978742" />
+                <input type="hidden" name="ctl00$ContentPlaceHolder1$PostNews$hddLongtitude" id="hddLongtitude" value="105.85244722590335" />
+                <input type="hidden" name="ctl00$ContentPlaceHolder1$PostNews$txtPositionX" id="txtPositionX" value="14.058324" />
+                <input type="hidden" name="ctl00$ContentPlaceHolder1$PostNews$txtPositionY" id="txtPositionY" value="108.277199" />
+
+                
+							<script type="text/javascript" src="https://maps.google.com/maps/api/js?key=AIzaSyAbkqq1po0p6Z1rnpQSSlO4x32JrdnedY0"></script>						
+							{{ javascript_include('template1/js/mapcontrol.js') }}
+							<div id="mapinfo">
+							    <div id="map_canvas"></div>
+							</div>
+
 						</div>
 						<hr/>
 						<div>
@@ -390,6 +402,7 @@
 		$(document).off('change','#m_provin_id');
 		$(document).on('change','#m_provin_id',function(){			
 			change_district_option('');
+			change_map();
 		});
 		var change_district_option= function(district_id){
 			var val = $('#m_provin_id').val();
@@ -410,18 +423,9 @@
 		change_district_option('{{m_district_id}}');
 
 		$(document).off('change','#m_district_id');
-		$(document).on('change','#m_district_id',function(){
-			// var val = $(this).val();
-			// var option = '<option value="">--Chọn Phường/Xã--</option>';
-			// $.each(ward_list,function(key,item){
-			// 	//console.log(item);
-			// 	if(val == item[2]){
-			// 		option +='<option value="'+item[0]+'">'+item[1]+'</option>';
-			// 	}
-			// });
-			// $('#m_ward_id').empty();
-			// $('#m_ward_id').append(option);
+		$(document).on('change','#m_district_id',function(){			
 			change_war_option('');
+			change_map();
 		});
 		var change_war_option = function(m_ward_id){
 			var val = $('#m_district_id').val();
@@ -437,7 +441,7 @@
 				}
 			});
 			$('#m_ward_id').empty();
-			$('#m_ward_id').append(option);
+			$('#m_ward_id').append(option);		
 		};
 		change_war_option('{{m_ward_id}}');
 		$(document).off('change','#m_ward_id');
@@ -452,6 +456,60 @@
 			});
 			$('#m_street_id').empty();
 			$('#m_street_id').append(option);
+			change_map();			
+		});
+		function change_map(){
+			// var tinh   = $("#m_provin_id :selected").text();
+			// var huyen  = $("#m_district_id :selected").text();
+			// var phuong = $("#m_ward_id :selected").text();
+			// var duong  = $("#m_street_id :selected").text();
+			var dc     = $("#post_address").val().trim();
+			var addr ="";
+			if(dc !=""){
+				addr += dc;
+			} 
+			if($("#m_street_id").val()!=""){				
+				if(addr !=""){
+					addr +=" "+ $("#m_street_id :selected").text();
+				}else{
+					addr +=$("#m_street_id :selected").text();
+				}
+			} 
+			if($("#m_ward_id").val() !=""){
+				if(addr !=""){
+					addr +=", " + $("#m_ward_id :selected").text();
+				}else{
+					addr += $("#m_ward_id :selected").text();
+				}
+				
+			} 
+			if($("#m_district_id").val() !=""){
+				if(addr !=""){
+					addr +=", " + $("#m_district_id :selected").text();
+				}else{
+					addr += $("#m_district_id :selected").text();
+				}
+
+			} 
+			if($("#m_provin_id").val() !=""){
+				if(addr !=""){
+					addr += ", " + $("#m_provin_id :selected").text();
+				}else{
+					addr += $("#m_provin_id :selected").text();
+				}
+			} 
+			addr +=', Việt Nam';
+
+			$('#maps_address').val(addr);
+			$('#maps_address').enter();
+		}
+		$(document).off('change','#m_street_id');
+		$(document).on('change','#m_street_id',function(){
+			change_map();
+		});
+		$(document).off('change','#post_address');
+		$(document).on('change','#post_address',function(){
+			change_map();
 		});
 		//change_m_type_id($("input[name='m_type_id']:checked").val());
 		$(document).off('change','.m_type_id');
@@ -586,7 +644,7 @@
         });
 	});
 var map, ele, mapH, mapW, addEle, mapL, mapN, mapZ;
-
+/*
 ele = 'maps_mapcanvas';
 addEle = 'maps_address';
 mapLat = 'maps_maplat';
@@ -639,12 +697,18 @@ function initializeMap(){
         draggable: true,
         animation: google.maps.Animation.DROP
     });
+    var infowindow = new google.maps.InfoWindow({
+	          content: 'Địa chỉ: 123'
+	        });
+	         google.maps.event.addListener(markers[0], 'click', function() {
+		      infowindow.open(map,markers[0]);
+		    });
     markerdragEvent(markers);
     	// Init search box
     //duong + phuong + tinh + huyen 
 	var searchBox = new google.maps.places.SearchBox(document.getElementById(addEle));
-
-	google.maps.event.addListener(searchBox, 'places_changed', function(){
+    var autocomplete = new google.maps.places.Autocomplete(document.getElementById(addEle));
+	google.maps.event.addListener(searchBox, 'places_changed', function(){ //places_changed
 	    var places = searchBox.getPlaces();
 
 	    if (places.length == 0) {
@@ -732,5 +796,5 @@ function markerdragEvent(markers){
 		    $("#" + mapLng).val(e.latLng.lng());
 		});
     }
-}
+}*/
 </script>

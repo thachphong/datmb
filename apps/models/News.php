@@ -65,6 +65,7 @@ class News extends DBModel
         }
         return null;
     }
+  
   public function _insert($param){
     $this->news_name = $param['news_name'];
     $this->news_no= $param['news_no'];
@@ -128,6 +129,23 @@ class News extends DBModel
                 'bind' => array('news_no' => $news_no,'news_id'=>$news_id)
         ));
   }
+  public function get_news_row($news_id){
+        $sql=" select n.news_id,
+                  n.news_no,
+                  n.news_name,               
+                  n.content,                 
+                  n.des,
+                  n.img_path,                 
+                  DATE_FORMAT(n.add_date ,'%d/%m/%Y %H:%i')  add_date,
+                  n.add_user,
+                  n.ctg_id,
+                    c.ctg_name
+              from news n
+                left JOIN category c on c.ctg_id = n.ctg_id
+               where n.news_id = :news_id";
+       return $this->query_first($sql ,array('news_id'=>$news_id));
+        
+  }
   public function get_news_rows($ctg_id,$limit=10){
         $sql="select n.news_id,
                   n.news_no,
@@ -152,5 +170,44 @@ class News extends DBModel
               order by n.news_id desc
               limit $limit";
         return $this->pho_query($sql);
+  }
+  public function get_news_byctgno($ctg_no,$start_row = 0){
+    $limit =PAGE_NEWS_LIMIT_RECORD;
+    $sql="select news_id, news_no,news_name,des,img_path from news  where del_flg =0
+        and ctg_id in (select ctg_id from category 
+          where ctg_no = :ctg_no
+          union all
+          select ctg_id from category 
+          where parent_id =(select ctg_id from category where ctg_no = :ctg_no)
+        )
+        order by news_id desc
+        limit $limit
+        OFFSET $start_row
+        ";
+    return $this->pho_query($sql,array('ctg_no'=>$ctg_no));
+  }
+  public function get_news_byctgno_count($ctg_no){
+   // $limit =PAGE_NEWS_LIMIT_RECORD;
+    $sql="select count(news_id) cnt
+          from news  where del_flg =0
+        and ctg_id in (select ctg_id from category 
+          where ctg_no = :ctg_no
+          union all
+          select ctg_id from category 
+          where parent_id =(select ctg_id from category where ctg_no = :ctg_no)
+        )      
+        ";
+    $res = $this->query_first($sql,array('ctg_no'=>$ctg_no));
+    return $res['cnt'];
+  }
+  public function get_news_relation($ctg_id,$news_id){
+    $sql="select news_id, news_no,news_name,des,img_path from news  
+      where del_flg = 0
+        and ctg_id = :ctg_id
+        and news_id <> :news_id
+        order by news_id desc
+        limit 6";
+    $res = $this->pho_query($sql ,array('ctg_id'=>$ctg_id,'news_id'=>$news_id));    
+    return $res;
   }
 }

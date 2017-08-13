@@ -3,44 +3,38 @@
 namespace Multiple\Frontend\Controllers;
 
 use Multiple\PHOClass\PHOController;
-use Multiple\Models\Posts;
+use Multiple\Models\News;
 use Multiple\Models\Tags;
 use Multiple\Models\CheckView;
-
+use Multiple\PHOClass\PhoLog;
 class NewsController extends PHOController
 {
 
-	public function indexAction($id)
+	public function indexAction($url)
 	{
+        $db = new News();
+        $exp  = explode('_', $url)  ;   
+        $id = $exp[count($exp)-1];
+        $result = $db->get_news_row($id);
 		
-		//$this->view->name= 'abc';
-		//return $this->response->redirect('login');
+        $result['relations'] = $db->get_news_relation($result['ctg_id'],$result['news_id']);
+		$this->set_template_share();
+        PhoLog::debug_var('---tét---',$result);
+        $this->ViewVAR($result);
 		
-		$ip = $this->get_client_ip_server();
-		$db_v =new  CheckView();
-		
-		
-        $url =  $this->request->getURI();
-        $abc =1;
-        $db = new Posts();
-       // $post_data= Posts::findFirst
-        $post_data = Posts::findFirst(array("id = :id:  AND status = 1 ",'bind' => array('id' => $id) ));
-        $post_data->total_view += 1; 
-        $post_data->save();
-        $db_v->postid = $post_data->id;
-        $db_v->user_ip = $ip;
-        $db_v->date_view = date('Y-m-d');
-        $db_v->time_view = date('H:i:s');
-        $db_v->save();
-        $tagpost = new Tags();
-        $tag_data = $tagpost->get_by_post($id);
-        $relation_old = $db->get_realtion_old($post_data->id,$post_data->type,$post_data->menu_id); 
-        $relation_new = $db->get_realtion_new($post_data->menu_id,$post_data->id); 
-        $this->view->post = $post_data;
-        $this->view->relation_old = $relation_old;
-        $this->view->relation_new = $relation_new;
-        $this->view->tags = $tag_data;
-        $this->view->menu_id = $post_data->menu_id;
+  //       $url =  $this->request->getURI();
+  //       $abc =1;
+  //       $db = new Posts();
+  //      // $post_data= Posts::findFirst
+  //       $post_data = Posts::findFirst(array("id = :id:  AND status = 1 ",'bind' => array('id' => $id) ));
+  //       $post_data->total_view += 1; 
+  //       $post_data->save();
+  //       $db_v->postid = $post_data->id;
+  //       $db_v->user_ip = $ip;
+  //       $db_v->date_view = date('Y-m-d');
+  //       $db_v->time_view = date('H:i:s');
+  //       $db_v->save();
+        
 	}
 	public function viewAction($id)
 	{

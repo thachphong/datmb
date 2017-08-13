@@ -5,16 +5,17 @@ namespace Multiple\Frontend\Controllers;
 use Multiple\PHOClass\PHOController;
 use Multiple\Models\Posts;
 use Multiple\Models\News;
-use Phalcon\Cache\Backend\File as BackFile;
-use Phalcon\Cache\Frontend\Data as FrontData;
+//use Phalcon\Cache\Backend\File as BackFile;
+//use Phalcon\Cache\Frontend\Data as FrontData;
 class IndexController extends PHOController
 {
 
 	public function indexAction()
 	{
 		$options = ['lifetime' => 900 ]; // thoi gian tinh bang giay 
- 		$frontendCache = new FrontData($options); 	
- 		$cache = new BackFile( $frontendCache,  ['cacheDir' => PHO_CACHE_DIR ]);	
+		$cache = $this->createCache($options);
+ 		//$frontendCache = new FrontData($options); 	
+ 		///$cache = new BackFile( $frontendCache,  ['cacheDir' => PHO_CACHE_DIR ]);	
  		$cacheKey = '67_66_68_69';
  		$ne = new News();
  		//$param  = $this->dataCache->get($cacheKey);
