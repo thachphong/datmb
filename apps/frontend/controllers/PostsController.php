@@ -61,6 +61,8 @@ class PostsController extends PHOController
 			$result['img_list']=array();
 			$result['post_view_id']='';
 			$result['post_contract_id']='';
+			$result['map_lat'] ='';
+			$result['map_lng'] = '';
 		}else{
 			$db = new Posts();
 			$dbimg = new PostsImg();

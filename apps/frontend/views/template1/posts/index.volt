@@ -208,65 +208,13 @@
 						</div>
 						<div class="row row-margin-bottom" >
 
-							<!--<input type="text" class="form-control" name="maps_address" id="maps_address" value="" placeholder="Nhập tên địa điểm cần tìm" style="display:block">
+							<input type="text" id="maps_address" value=""  style="display:none">
+							<input type="text" name="map_lat" id="map_lat" value="{{map_lat}}"  style="display:none">
+							<input type="text" name="map_lng" id="map_lng" value="{{map_lng}}"  style="display:none">
 							<div id="maps_maparea">
 						      <div id="maps_mapcanvas" style="margin-top:10px;" class="form-group"></div>
-						      <div class="row" style="display:none">
-						          <div class="col-xs-6">
-						            <div class="form-group">
-						              <div class="input-group">
-						                  <span class="input-group-addon">L</span>
-						                  <input type="text" class="form-control" name="maps[maps_mapcenterlat]" id="maps_mapcenterlat" value="" readonly="readonly">
-						              </div>
-						            </div>
-						          </div>
-						          <div class="col-xs-6">
-						            <div class="form-group">
-						              <div class="input-group">
-						                  <span class="input-group-addon">N</span>
-						                  <input type="text" class="form-control" name="maps[maps_mapcenterlng]" id="maps_mapcenterlng" value="" readonly="readonly">
-						              </div>
-						             </div>
-						          </div>
-						          <div class="col-xs-6">
-						            <div class="form-group">
-						              <div class="input-group">
-						                  <span class="input-group-addon">L</span>
-						                  <input type="text" class="form-control" name="maps[maps_maplat]" id="maps_maplat" value="" readonly="readonly">
-						              </div>
-						             </div>
-						          </div>
-						          <div class="col-xs-6">
-						            <div class="form-group">
-						              <div class="input-group">
-						                  <span class="input-group-addon">N</span>
-						                  <input type="text" class="form-control" name="maps[maps_maplng]" id="maps_maplng" value="" readonly="readonly">
-						              </div>
-						              </div>
-						          </div>
-						      </div>
-						      <div class="row" style="display:none">
-						          <div class="col-xs-12">
-						            <div class="form-group">
-						              <div class="input-group">
-						                  <span class="input-group-addon">Z</span>
-						                  <input type="text" class="form-control" name="maps[maps_mapzoom]" id="maps_mapzoom" value="" readonly="readonly">
-						              </div>
-						             </div>
-						          </div>
-						      </div>
-						  </div>-->
-						  <input type="hidden" name="ctl00$ContentPlaceHolder1$PostNews$hddLatitude" id="hddLatitude" value="21.02894860978742" />
-                <input type="hidden" name="ctl00$ContentPlaceHolder1$PostNews$hddLongtitude" id="hddLongtitude" value="105.85244722590335" />
-                <input type="hidden" name="ctl00$ContentPlaceHolder1$PostNews$txtPositionX" id="txtPositionX" value="14.058324" />
-                <input type="hidden" name="ctl00$ContentPlaceHolder1$PostNews$txtPositionY" id="txtPositionY" value="108.277199" />
-
-                
-							<script type="text/javascript" src="https://maps.google.com/maps/api/js?key=AIzaSyAbkqq1po0p6Z1rnpQSSlO4x32JrdnedY0"></script>						
-							{{ javascript_include('template1/js/mapcontrol.js') }}
-							<div id="mapinfo">
-							    <div id="map_canvas"></div>
-							</div>
+						    </div>
+						  
 
 						</div>
 						<hr/>
@@ -358,6 +306,7 @@
 								<button class="btn_dangtin btn_red" id="btn_cancel"><i class="fa fa-times"></i>Hủy bỏ</button>
 								<button class="btn_dangtin" id="btn_preview" style="width:110px;"><i class="fa fa-eye"></i>Xem trước</button>
 								<button class="btn_dangtin" id="btn_save" ><i class="fa fa-check-square-o"></i>Đăng tin</button>
+								<button id="mapsubmit" style="display:none">Tìm vị trí</button>
 							</div>
 						</div>
 					
@@ -463,16 +412,16 @@
 			// var huyen  = $("#m_district_id :selected").text();
 			// var phuong = $("#m_ward_id :selected").text();
 			// var duong  = $("#m_street_id :selected").text();
-			var dc     = $("#post_address").val().trim();
-			var addr ="";
-			if(dc !=""){
-				addr += dc;
-			} 
+			var dc   = $("#post_address").val().trim();
+			var addr = "";
+			// if(dc !=""){
+			// 	addr += dc;
+			// } 
 			if($("#m_street_id").val()!=""){				
 				if(addr !=""){
-					addr +=" "+ $("#m_street_id :selected").text();
+					addr += " "+ $("#m_street_id :selected").text();
 				}else{
-					addr +=$("#m_street_id :selected").text();
+					addr += $("#m_street_id :selected").text();
 				}
 			} 
 			if($("#m_ward_id").val() !=""){
@@ -498,18 +447,26 @@
 					addr += $("#m_provin_id :selected").text();
 				}
 			} 
-			addr +=', Việt Nam';
-
-			$('#maps_address').val(addr);
-			$('#maps_address').enter();
+			$("#post_address").val(addr);
+			
+			change_location();
+			
 		}
+		function change_location(){
+			var addr   = $("#post_address").val().trim();
+			if(addr !=''){
+				addr +=', Việt Nam';
+				$('#maps_address').val(addr);			
+				$('#mapsubmit').click();
+			}
+		};
 		$(document).off('change','#m_street_id');
 		$(document).on('change','#m_street_id',function(){
 			change_map();
 		});
 		$(document).off('change','#post_address');
 		$(document).on('change','#post_address',function(){
-			change_map();
+			change_location();
 		});
 		//change_m_type_id($("input[name='m_type_id']:checked").val());
 		$(document).off('change','.m_type_id');
@@ -644,7 +601,7 @@
         });
 	});
 var map, ele, mapH, mapW, addEle, mapL, mapN, mapZ;
-/*
+
 ele = 'maps_mapcanvas';
 addEle = 'maps_address';
 mapLat = 'maps_maplat';
@@ -655,18 +612,18 @@ mapCenLat = 'maps_mapcenterlat';
 mapCenLng = 'maps_mapcenterlng';
 
 // Call Google MAP API
-if( ! document.getElementById('googleMapAPI') ){
-	var s = document.createElement('script');
-	s.type = 'text/javascript';
-	s.id = 'googleMapAPI';
-	s.src = 'https://maps.googleapis.com/maps/api/js?v=3.exp&key=AIzaSyAbkqq1po0p6Z1rnpQSSlO4x32JrdnedY0&sensor=false&libraries=places&callback=controlMap';
-	document.body.appendChild(s);
-}else{
-	controlMap();
-}
+// if( ! document.getElementById('googleMapAPI') ){
+// 	var s = document.createElement('script');
+// 	s.type = 'text/javascript';
+// 	s.id = 'googleMapAPI';
+// 	s.src = 'https://maps.googleapis.com/maps/api/js?v=3.exp&key=AIzaSyAbkqq1po0p6Z1rnpQSSlO4x32JrdnedY0&sensor=false&libraries=places&callback=initMap';
+// 	document.body.appendChild(s);
+// }else{
+// 	initMap();
+// }
 
 // Creat map and map tools
-function initializeMap(){
+/*function initializeMap(){
 	
 	var zoom = parseInt($("#" + mapZ).val()), lat = parseFloat($("#" + mapLat).val()), lng = parseFloat($("#" + mapLng).val()), Clat = parseFloat($("#" + mapCenLat).val()), Clng = parseFloat($("#" + mapCenLng).val());
 	Clat || (Clat = 20.984516000000013, $("#" + mapCenLat).val(Clat));
@@ -797,4 +754,75 @@ function markerdragEvent(markers){
 		});
     }
 }*/
+var markers = [];
+var map_lat =21.0197704; 
+var map_lng = 105.8007434;
+{%if map_lat|length > 0%}
+	map_lat = {{map_lat}};
+{%endif%}
+{%if map_lng|length >0%}
+	map_lng = {{map_lng}};
+{%endif%}
+
+var post_address = '{{address}}';
+if(post_address.length ==0){ post_address = "152 Vũ Phạm Hàm , Phường Yên Hòa , Quận Cầu Giấy, Hà Nội";}
+    function initMap() {
+	  	mapW = $('#' + ele).innerWidth();
+		mapH = mapW * 3 / 5;
+		
+		// Init MAP
+		$('#' + ele).width(mapW).height(mapH > 400 ? 400 : mapH);
+        var map = new google.maps.Map(document.getElementById('maps_mapcanvas'), {
+          zoom: 15,
+          scrollwheel: false,
+          center: {lat: map_lat, lng: map_lng}
+        });
+		
+		markers[0] = new google.maps.Marker({
+	        map: map,
+	        position: new google.maps.LatLng(map_lat,map_lng),
+	        draggable: true,
+	        animation: google.maps.Animation.DROP
+	    });
+		var infowindow = new google.maps.InfoWindow;
+		infowindow.setContent(post_address);
+        infowindow.open(map, markers[0]);
+	
+        var geocoder = new google.maps.Geocoder();
+		//var infowindow = new google.maps.InfoWindow;
+        document.getElementById('mapsubmit').addEventListener('click', function() {
+          geocodeAddress(geocoder, map,infowindow);
+        });
+      }
+
+      function geocodeAddress(geocoder, resultsMap,infowindow) {
+        var address = document.getElementById('maps_address').value;
+        geocoder.geocode({'address': address}, function(results, status) {
+          if (status === 'OK') {
+           	for (var i = 0, marker; marker = markers[i]; i++) {
+	         	marker.setMap(null);
+	         	//console.log(i);
+	    	 }
+	    	//setMapOnAll(null);
+	    	markers=[];
+            resultsMap.setCenter(results[0].geometry.location);
+            marker = new google.maps.Marker({
+              map: resultsMap,
+              position: results[0].geometry.location
+            });
+			infowindow.setContent(address);
+            infowindow.open(map, marker);
+            markers.push(marker);
+			$('#map_lat').val(results[0].geometry.location.lat());
+			$('#map_lng').val(results[0].geometry.location.lng());
+			//console.log(results[0].geometry.location.lat());
+			//console.log(results[0].geometry.location.lng());
+          } else {
+            //alert('Geocode was not successful for the following reason: ' + status);
+          }
+        });
+      }
+
 </script>
+<script async defer  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAGWoTNwauIzO_pJEDymaSYTG031uJbbkk&callback=initMap">
+    </script>

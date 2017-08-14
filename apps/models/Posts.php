@@ -34,6 +34,8 @@ class Posts extends DBModel
     public  $street_width    ;
     public  $facade_width    ;
     public  $m_directional_id    ;
+    public  $map_lat;
+    public  $map_lng;
         
     public function initialize()
     {
@@ -70,6 +72,8 @@ class Posts extends DBModel
 				  p.street_width,
 				  p.facade_width,
 				  p.m_directional_id,
+				  p.map_lat,
+				  p.map_lng,
 				 v.post_level,				
 				 DATE_FORMAT(v.end_date ,'%d/%m/%Y')  end_date,
 				 DATE_FORMAT(v.start_date ,'%d/%m/%Y')  start_date,	
@@ -112,6 +116,8 @@ class Posts extends DBModel
 	    $this->street_width    = $param['street_width'];
 	    $this->facade_width    = $param['facade_width'];
 	    $this->m_directional_id    = $param['m_directional_id'];
+	    $this->map_lat = $param['map_lat'];
+	    $this->map_lng = $param['map_lng'];
 	    $this->save();
 	    return $this->post_id;
 	}
@@ -122,6 +128,7 @@ class Posts extends DBModel
 					post_no = :post_no,
 					m_provin_id = :m_provin_id,
 					m_district_id = :m_district_id,
+					m_ward_id = :m_ward_id,
 					price = :price,
 					acreage = :acreage,
 					content = :content,
@@ -133,6 +140,8 @@ class Posts extends DBModel
 					facade_width = :facade_width,
 					m_directional_id = :m_directional_id,
 					address =:address,
+					map_lat = :map_lat ,
+					map_lng = :map_lng,
 					m_type_id =:m_type_id,
 					upd_date =now()
 
@@ -147,6 +156,7 @@ class Posts extends DBModel
                     ,'m_provin_id'
                     ,'m_type_id'
                     ,'m_district_id'
+                    ,'m_ward_id'
                     ,'price'
                     ,'acreage'
                     ,'content'
@@ -157,6 +167,8 @@ class Posts extends DBModel
                     ,'m_directional_id'
                     ,'address'
                     ,'facade_width'
+                    ,'map_lat'
+                    ,'map_lng'
                     )));  
         return TRUE;
 	}
