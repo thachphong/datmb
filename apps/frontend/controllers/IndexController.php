@@ -5,8 +5,14 @@ namespace Multiple\Frontend\Controllers;
 use Multiple\PHOClass\PHOController;
 use Multiple\Models\Posts;
 use Multiple\Models\News;
-//use Phalcon\Cache\Backend\File as BackFile;
-//use Phalcon\Cache\Frontend\Data as FrontData;
+use Multiple\Models\Provincial;
+use Multiple\Models\District;
+use Multiple\Models\Ward;
+use Multiple\Models\Street;
+use Multiple\Models\Directional;
+use Multiple\Models\Unit;
+use Multiple\Models\Category;
+
 class IndexController extends PHOController
 {
 
@@ -25,8 +31,21 @@ class IndexController extends PHOController
 			$param['noingoaithat'] = $ne->get_news_rows(66,6); // noi ngoai that
 			$param['phongthuy'] = $ne->get_news_rows(68,4); // phong thuy
 			$param['tuvanluat'] = $ne->get_news_rows(69,4); // tu van luat
-			$cache->save($cacheKey, $param);
+			
 			//$frontendCache->save( $param);
+			$cache2 = $this->createCache( ['lifetime' => 900 ]); // 1 ngay
+			$cacheKey2 = 'seachtopparam1.cache';
+			$search_pa = $cache2->get($cacheKey2);
+			if($search_pa === null){			
+				$search_pa['categorys'] = Category::get_all();
+				$search_pa['provincials'] = Provincial::get_all();
+				$search_pa['directionals'] = Directional::find();
+				$search_pa['units'] = Unit::find();			
+				$cache->save($cacheKey2, $search_pa);
+			}
+			$param = array_merge($param, $search_pa);
+
+			$cache->save($cacheKey, $param);
  		}		
 
 		$db = new Posts();		
@@ -37,6 +56,19 @@ class IndexController extends PHOController
 		$this->ViewVAR($param);	
 	}
 	public function route404Action(){
+		
+	}
+	public function districtAction($m_provin_id){
+		$db = new Provincial();
+		$data['list'] = $db->get_byparent($m_provin_id);
+		return $this->ViewJSON($data);
+	}
+	public function wardAction($m_district_id){
+		$db = new Provincial();
+		$data['list'] =$db->get_byparent($m_district_id);
+		return $this->ViewJSON($data);
+	}
+	public function streetAction($m_district_id){
 		
 	}
 }

@@ -6,7 +6,7 @@
             <div class="pn_title">
                <span class="bg_icon" style="padding: 6px 4px 4px 2px;"><i class="fa fa-list"></i></span>
                <h1>TIN RAO MỚI</h1>
-               <a class="read_more" href="{{url.get('tim-moi')}}">>> Xem thêm tin rao mới</a>
+               <a class="read_more" href="{{url.get('tin-moi')}}">>> Xem thêm tin rao mới</a>
             </div>
             <div class="new_list">
                {%for item in newlist%}
@@ -48,7 +48,7 @@
                   <ul class="boxright">
                   {%for key,item in noingoaithat%}
                      {%if key >0%}
-                        <li> <i class="fa fa-circle"></i><a href="{{url.get('tim-tuc/')}}{{item['news_no']}}_{{item['news_id']}}">{{item['news_name']}}</a></li>
+                        <li> <i class="fa fa-circle"></i><a href="{{url.get('t/')}}{{item['news_no']}}_{{item['news_id']}}">{{item['news_name']}}</a></li>
                      {%endif%}
                   {%endfor%}
                   </ul>
@@ -72,7 +72,7 @@
                   <ul class="boxright">
                   {%for key,item in kientruc%}
                      {%if key >0%}
-                        <li> <i class="fa fa-circle"></i><a href="{{url.get('tim-tuc/')}}{{item['news_no']}}_{{item['news_id']}}">{{item['news_name']}}</a></li>
+                        <li> <i class="fa fa-circle"></i><a href="{{url.get('t/')}}{{item['news_no']}}_{{item['news_id']}}">{{item['news_name']}}</a></li>
                      {%endif%}
                   {%endfor%}
                   </ul>
@@ -96,7 +96,7 @@
                   <ul class="boxright">
                   {%for key,item in phongthuy%}
                      {%if key >0%}
-                        <li> <i class="fa fa-circle"></i><a href="{{url.get('tim-tuc/')}}{{item['news_no']}}_{{item['news_id']}}">{{item['news_name']}}</a></li>
+                        <li> <i class="fa fa-circle"></i><a href="{{url.get('t/')}}{{item['news_no']}}_{{item['news_id']}}">{{item['news_name']}}</a></li>
                      {%endif%}
                   {%endfor%}
                   </ul>
@@ -118,7 +118,7 @@
                   <ul class="boxright">
                   {%for key,item in tuvanluat%}
                      {%if key >0%}
-                        <li> <i class="fa fa-circle"></i><a href="{{url.get('tim-tuc/')}}{{item['news_no']}}_{{item['news_id']}}">{{item['news_name']}}</a></li>
+                        <li> <i class="fa fa-circle"></i><a href="{{url.get('t/')}}{{item['news_no']}}_{{item['news_id']}}">{{item['news_name']}}</a></li>
                      {%endif%}
                   {%endfor%}
                   </ul>

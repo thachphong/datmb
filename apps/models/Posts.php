@@ -196,6 +196,19 @@ class Posts extends DBModel
 	}
 	public function get_post_byctgno($ctg_no,$start_row=0){
 		$limit = PAGE_LIMIT_RECORD;
+		$where ="";
+		$param = array();
+		if($ctg_no != 'allnew'){
+			$where =" and p.ctg_id in (
+					select ctg_id from category 
+					where del_flg =0
+					and ctg_no = :ctg_no
+					union all
+					select ctg_id from category 
+					where parent_id =(select ctg_id from category where del_flg =0  and ctg_no = :ctg_no)
+					)	";
+			$param['ctg_no'] = $ctg_no;
+		}
 		$sql="select p.post_id,p.post_name,p.post_no,p.price,p.acreage,pro.m_provin_name,dis.m_district_name,
 				NULLIF(un.m_unit_name,'') m_unit_name,
 				NULLIF(im.img_path,'') img_path,
@@ -208,32 +221,33 @@ class Posts extends DBModel
 				LEFT JOIN m_unit un on un.m_unit_id = p.unit_price 
 
 				where p.del_flg = 0
-				and p.ctg_id in (
-					select ctg_id from category 
-					where ctg_no = :ctg_no
-					union all
-					select ctg_id from category 
-					where parent_id =(select ctg_id from category where ctg_no = :ctg_no)
-					)				
+				$where			
 				order by p.post_id DESC				
 				limit $limit
 				OFFSET $start_row
 				";
-		return $this->pho_query($sql,array('ctg_no'=>$ctg_no));
+		return $this->pho_query($sql,$param);
 	}
-	public function get_post_byctgno_count($ctg_no){		
+	public function get_post_byctgno_count($ctg_no){	
+		$where ="";
+		$param = array();
+		if($ctg_no != 'allnew'){
+			$where =" and p.ctg_id in (
+					select ctg_id from category 
+					where del_flg =0
+					and ctg_no = :ctg_no
+					union all
+					select ctg_id from category 
+					where parent_id =(select ctg_id from category where del_flg =0  and ctg_no = :ctg_no)
+					)	";
+			$param['ctg_no'] = $ctg_no;
+		}	
 		$sql="select count(p.post_id) cnt
 				from posts p				
 				where p.del_flg = 0
-				and p.ctg_id in (
-					select ctg_id from category 
-					where ctg_no = :ctg_no
-					union all
-					select ctg_id from category 
-					where parent_id =(select ctg_id from category where ctg_no = :ctg_no)
-					)	
+				$where
 				";
-		$res = $this->query_first($sql,array('ctg_no'=>$ctg_no));
+		$res = $this->query_first($sql,$param);
 		return $res['cnt'];
 	}
 	public function get_vpost($post_id){
@@ -257,6 +271,8 @@ class Posts extends DBModel
 				  p.floor_num,
 				  p.street_width,
 				  p.facade_width,
+				  p.map_lat,
+				  p.map_lng,
 				  di.m_directional_name,
 				 v.post_level,				
 				 DATE_FORMAT(v.end_date ,'%d/%m/%Y')  end_date,

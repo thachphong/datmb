@@ -40,20 +40,7 @@ body.loading .modal_loading {
 }
 </style>
 <script type="text/javascript">
-var Pho_message_box = function (title, msg, closed_func, style) { 
-	/*modal({
-		type: 'info',
-		title: title,
-		text: msg,
-		size:'normal',      
-        closeClick: false,
-        closable: true, 
-        callback: function() {
-					if(closed_func){
-                        closed_func();
-                    }
-				}
-	});*/
+var Pho_message_box = function (title, msg, closed_func, style) { 	
 	$('#modal_body2').text(msg);
 	$('#myModalLabel2').text(title);
 	$('#btn_model_close').hide();
@@ -78,20 +65,6 @@ var change_header_background=function(id_header,ok_flg = true){
 	}
 }
 var Pho_message_box_error = function (title, msg, closed_func, style) { 
-	/*modal({
-		type: 'error',
-		title: title,
-		text: msg,
-		size:'normal',      
-        closeClick: false,
-        closable: true, 
-        callback: function() {
-					if(closed_func){
-                        closed_func();
-                    }
-		}
-        
-	});*/
 	
 	$('#modal_body2').text(msg);
 	$('#myModalLabel2').text(title);
@@ -108,25 +81,7 @@ var Pho_message_box_error = function (title, msg, closed_func, style) {
 	});	
 };
 var Pho_message_confirm = function (title, msg, closed_func, style) { 
-	/*modal({
-		type: 'confirm',
-		title: title,
-		text: msg,
-		size:'normal',      
-        //closeClick: false,
-        closable: true,         
-		buttonText: {
-					ok: "OK",		
-					yes: "OK",		
-					cancel: "Bỏ qua"
-				},
-        callback: function(e) {
-        	
-			if(closed_func && e){
-                closed_func();
-            }
-		}
-	});*/
+	
 	$('#modal_body2').text(msg);
 	$('#myModalLabel2').text(title);
 	$('#btn_modal_2').click();
@@ -138,22 +93,9 @@ var Pho_message_confirm = function (title, msg, closed_func, style) {
                 closed_func();
           }
 	  }
-	});
-	/*$('#myModalLabel2').modal({
-		backdrop:false
-	})*/
+	});	
 };
-//confirm
-		/*$('a#confirm').click(function() {
-			modal({
-				type: 'confirm',
-				title: 'Confirm',
-				text: 'Are you sure you want to delete your brain?',
-				callback: function(result) {
-					alert(result);
-				}
-			});
-		});*/
+
 var Pho_json_ajax= function (type,url,data,done_fun){
     $.ajax({
 		url: url,
@@ -185,40 +127,7 @@ var Pho_upload= function (url,data,done_fun){
 		type: 'POST'
 	});
 };
-var Pho_modal=function(html_data,title,pa_width){
-	/*var n = {
-				type: "default",
-				title: null,
-				text: null,
-				size: "normal",
-				buttons: [{
-					text: "OK",
-					val: true,
-					onClick: function(e) {
-						return true
-					}
-				}],
-				center: true,
-				autoclose: false,
-				callback: null,
-				onShow: null,
-				animate: true,
-				closeClick: true,
-				closable: true,
-				theme: "default",
-				background: null,
-				zIndex: 1050,
-				modalid :"modal-window",
-				buttonText: {
-					ok: "OK",
-					yes: "Yes",
-					cancel: "Cancel"
-				},
-				template: '<div class="modal-box"><div class="modal-inner"><div class="modal-title"><a class="modal-close-btn"></a></div><div class="modal-text"></div><div class="modal-buttons"></div></div></div>'
-		}
-	var pa=	$.extend( n, t );
-	modal(pa);*/
-	
+var Pho_modal=function(html_data,title,pa_width){	
 	
 	$('#dialog_content_2').html(html_data);
 	$('#dialog_title_2').text(title);

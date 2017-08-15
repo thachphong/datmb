@@ -27,12 +27,17 @@ class CategoryController extends PHOController
         }
 
         $param['page'] = $page;
-        $info = $ctg->get_ctg_byno($ctg_no);
-        $param['ctg_name'] = $info->ctg_name;
+        $param['ctg_name'] ='Tin rao mới';
+        $param['ctg_no'] ='tin-moi';
+        if($ctg_no != 'allnew'){
+            $info = $ctg->get_ctg_byno($ctg_no);
+            $param['ctg_name'] = $info->ctg_name;
+            $param['ctg_no'] ='c/'. $ctg_no;
+        }        
         $param['post']=$db->get_post_byctgno($ctg_no,$start_row);
         $param['total_post'] = $db->get_post_byctgno_count($ctg_no);
         $param['total_page']= round($param['total_post']/PAGE_LIMIT_RECORD);
-        $param['ctg_no'] = $ctg_no;
+        
         $start = $page - 2;
         $end = $page + 2;
         if($page < 3){

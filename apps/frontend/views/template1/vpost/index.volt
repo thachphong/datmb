@@ -20,10 +20,16 @@
             </div>
             <hr class="line" />
             <div class="post_tab">
-               <a href="javascript:void(0)" class="tab_item active"><i class="fa fa-picture-o"></i>Hình ảnh(1)</a>
-               <a href="javascript:void(0)" class="tab_item"><i class="fa fa-map-marker3"></i>Bản đồ</a>
+               <a href="javascript:void(0)" data-tab="#tab_detail_1" class="tab_item active"><i class="fa fa-picture-o"></i>Hình ảnh(1)</a>
+               <a href="javascript:void(0)" data-tab="#tab_detail_2" class="tab_item"><i class="fa fa-map-marker3"></i>Bản đồ</a>
             </div>
-            <div class="tab_item_detail" id="tab_detail_1">
+            <!-- <ul class="nav nav-tabs" id="comment_tab">
+                 <li class="active"><a data-toggle="tab" href="#tab_detail_1">Facebook</a></li>
+                 <li><a data-toggle="tab" href="#tab_detail_2" >Google+</a></li>                 
+               </ul> -->
+               <!-- <div class="tab-content"> -->
+                  <!-- <div id="tab_detail_1" class="tab-pane fade in "> -->
+              <div class="tab_item_detail" id="tab_detail_1">
                <div>
                   <ul class="bxslider" >
                      {%for img in imglist%}
@@ -39,10 +45,13 @@
                   </ul>                 
                </div>
             </div>
-            <div class="tab_item_detail" id="tab_detail_2">
-               <div id="map" style="width:100%;height:400px;"></div>
+         <!--    <div id="tab_detail_2" class="tab-pane fade in active"> -->
+            <div class="tab_item_detail" id="tab_detail_2" style="display:block">
+               <div id="maps_mapcanvas" style="width:100%">
+               </div>
             </div>
-            <div class="col-md-6 col-sm-6 col-xs-12">
+           <!--  </div> -->
+            <div class="col-md-6 col-sm-6 col-xs-12 col_left">
                <h3 class="post_body_title">Đặc điểm bất động sản</h3>
                <table class="other_detail">
                   <tr>
@@ -75,7 +84,7 @@
                   </tr>
                </table>
             </div>
-            <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="col-md-6 col-sm-6 col-xs-12 col_right">
                <h3 class="post_body_title">Thông tin liên hệ</h3>
                <table class="other_detail">
                   <tr>
@@ -101,7 +110,50 @@
                </table>
             </div>
          </div> 
-         
+         <div class="row margin_top" >
+            <div class="pn_title">
+               <span class="bg_icon" style="padding: 6px 4px 4px 2px;"><i class="fa fa-list"></i></span>
+               <h1>Bình luận</h1>               
+            </div>
+            <div class="row margin_top pn_background pn_border">
+               <ul class="nav nav-tabs" id="comment_tab">
+                 <li class="active"><a data-toggle="tab" href="#tab1">Facebook</a></li>
+                 <li><a data-toggle="tab" href="#tab2" >Google+</a></li>                 
+               </ul>
+               <div class="tab-content">
+                  <div id="tab1" class="tab-pane fade in active">
+                  <div class="fb-comments" data-href="{{url.get('b/')}}{{post_no}}_{{post_id}}" data-width="100%" data-numposts="20"></div>
+                                 <div id="fb-root"></div>
+                                    <script>(function(d, s, id) {
+                                      var js, fjs = d.getElementsByTagName(s)[0];
+                                      if (d.getElementById(id)) return;
+                                      js = d.createElement(s); js.id = id;
+                                      js.src = "//connect.facebook.net/vi_VN/sdk.js#xfbml=1&version=v2.9&appId=807407399380069";
+                                      fjs.parentNode.insertBefore(js, fjs);
+                                    }(document, 'script', 'facebook-jssdk'));</script>
+                  </div>
+                  <div id="tab2" class="tab-pane fade">
+                     <div id="google_comments" style="width:100%"></div>
+                     <script src="https://apis.google.com/js/plusone.js" type="text/javascript" >{lang: 'vi'}</script>
+                     <script>gapi.comments.render('google_comments',{
+                        href:window.location.href,
+                        width:"725",
+                        first_party_property: 'BLOGGER',
+                        view_type: 'FILTERED_POSTMOD'}
+                        );
+                        function fix_google()
+                        {                           
+                           $("#google_comments").css({"width":"100%"});                           
+                           $("#google_comments iframe").css("width","100%");
+                        }
+                        setTimeout(fix_google,4000);
+                     </script>
+                  </div>
+                  
+               </div>
+            </div>
+            
+         </div>
             
       </div>
       {{ partial('includes/right') }}
@@ -117,29 +169,63 @@ $(document).ready(function() {
         pagerCustom: '#bx-pager'
         ,auto:true
    });
+   
    $(document).off('click','.tab_item');
    $(document).on('click','.tab_item',function(){
       $('.tab_item').removeClass('active');
       $(this).addClass('active');
+      $('.tab_item_detail').hide();
+      $($(this).attr('data-tab')).show();
    });
 
 });
-   function initMap() {
-        var myLatLng = {lat: -25.363, lng: 131.044};
 
-        // Create a map object and specify the DOM element for display.
-        var map = new google.maps.Map(document.getElementById('map'), {
-          center: myLatLng,
+   var map, ele, mapH, mapW, addEle, mapL, mapN, mapZ;
+
+ele = 'maps_mapcanvas';
+addEle = 'maps_address';
+mapLat = 'map_lat';
+var maplng = "map_lng";
+var markers = [];
+var map_lat =21.0197704; 
+var map_lng = 105.8007434;
+{%if map_lat|length > 0%}
+  map_lat = {{map_lat}};
+{%endif%}
+{%if map_lng|length >0%}
+  map_lng = {{map_lng}};
+{%endif%}
+
+var post_address = '{{address}}';
+if(post_address.length ==0){ post_address = "152 Vũ Phạm Hàm , Phường Yên Hòa , Quận Cầu Giấy, Hà Nội";}
+    function initMap() {
+      mapW = $('#tab_detail_1').innerWidth();
+      mapH = mapW * 3 / 5;
+     console.log(mapW);
+     console.log(mapH);
+    // Init MAP
+    $('#' + ele).width(mapW).height(mapH > 400 ? 400 : mapH);
+        var map = new google.maps.Map(document.getElementById('maps_mapcanvas'), {
+          zoom: 15,
           scrollwheel: false,
-          zoom: 8
+          center: {lat: map_lat, lng: map_lng}
         });
-
-        // Create a marker and set its position.
-        var marker = new google.maps.Marker({
+    
+    markers[0] = new google.maps.Marker({
           map: map,
-          position: myLatLng,
-          title: 'Hello World!'
-        });
+          position: new google.maps.LatLng(map_lat,map_lng),
+          draggable: true,
+          animation: google.maps.Animation.DROP
+      });
+    var infowindow = new google.maps.InfoWindow;
+    infowindow.setContent(post_address);
+        infowindow.open(map, markers[0]);  
+
+      setTimeout(function(){$('#tab_detail_2').hide();},1000);
+       
       }
+
+      
 </script>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAbkqq1po0p6Z1rnpQSSlO4x32JrdnedY0&callback=initMap"  async defer></script>
+<script async defer  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAGWoTNwauIzO_pJEDymaSYTG031uJbbkk&callback=initMap">
+    </script>

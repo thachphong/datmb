@@ -15,4 +15,8 @@ class District extends DBModel
     public function get_all(){
          return District::find();
     }
+    public function get_byparent($m_district_id){
+        $sql ="select m_district_id,m_district_name from m_district where m_provin_id=:m_provin_id";
+        return $this->pho_query($sql,array('m_provin_id'=>$m_provin_id));
+    }
 }
