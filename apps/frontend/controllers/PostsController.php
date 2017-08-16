@@ -212,6 +212,7 @@ class PostsController extends PHOController
 	}
 	public function check_validate_update(&$param){
 		$param['post_no'] = $this->convert_url($param['post_name']);
+		$param['address_ascii'] = $this->convert_ascii($param['address']);		
 		return "";
 	}
 	

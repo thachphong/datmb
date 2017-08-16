@@ -5,7 +5,19 @@ namespace Multiple\PHOClass;
 use Phalcon\Mvc\Controller;
 use Phalcon\Cache\Backend\File as BackFile;
 use Phalcon\Cache\Frontend\Data as FrontData;
+use Phalcon\Cache\Backend\Memory;
 
+
+// Cache data
+// $frontCache = new FrontData();
+
+// $cache = new Memory($frontCache);
+
+// // Cache arbitrary data
+// $cache->save("my-data", [1, 2, 3, 4, 5]);
+
+// // Get data
+// $data = $cache->get("my-data");
 class PHOController extends Controller
 {
 	protected function get_param($arr_pa)
@@ -63,6 +75,11 @@ class PHOController extends Controller
  		$cache = new BackFile( $frontendCache,  ['cacheDir' => PHO_CACHE_DIR ]);
  		return $cache;
 	}
+	public function CacheMemory($options){
+		$frontendCache = new FrontData($options); 	
+ 		$cache = new Memory( $frontendCache);
+ 		return $cache;
+	}
 	public function check_loginadmin()
     {
         $auth = $this->session->get('auth');
@@ -103,6 +120,12 @@ class PHOController extends Controller
 		$arr_rep = array(' - ',';',',',':','!','&','%',"'",'"','(',')','/',"\\",'?' );
 		$str =str_replace($arr_rep,'', $str);
 		$str =str_replace(' ','-', $str);
+		return $str;
+	}
+	public function convert_ascii($str){
+		$str = $this->convert_vi_to_en($str);
+		$arr_rep = array(' - ',';',',',':','!','&','%',"'",'"','(',')','/',"\\",'?' );
+		$str =str_replace($arr_rep,'', $str);	
 		return $str;
 	}
 	public function get_client_ip_server() {

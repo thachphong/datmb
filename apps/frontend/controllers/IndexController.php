@@ -11,6 +11,7 @@ use Multiple\Models\Ward;
 use Multiple\Models\Street;
 use Multiple\Models\Directional;
 use Multiple\Models\Unit;
+use Multiple\Models\Sprice;
 use Multiple\Models\Category;
 
 class IndexController extends PHOController
@@ -40,7 +41,8 @@ class IndexController extends PHOController
 				$search_pa['categorys'] = Category::get_all();
 				$search_pa['provincials'] = Provincial::get_all();
 				$search_pa['directionals'] = Directional::find();
-				$search_pa['units'] = Unit::find();			
+				$search_pa['units'] = Unit::find();
+				$search_pa['sprices'] = Sprice::find();				
 				$cache->save($cacheKey2, $search_pa);
 			}
 			$param = array_merge($param, $search_pa);
@@ -58,9 +60,18 @@ class IndexController extends PHOController
 	public function route404Action(){
 		
 	}
-	public function districtAction($m_provin_id){
-		$db = new Provincial();
-		$data['list'] = $db->get_byparent($m_provin_id);
+	public function districtAction(){		
+		$ckey ="m_district_ward.cache";
+		$cache = $this->createCache(['lifetime' => 86400 ]); // 1 ngay
+		$data = $cache->get($ckey);
+		if($data === null){			
+			$db = new District();
+			$mw = new Ward();
+			$data['m_districts'] = $db->get_rows();
+			$data['m_wards'] = $mw->get_rows();			
+			$cache->save($ckey,$data);
+		}	
+	
 		return $this->ViewJSON($data);
 	}
 	public function wardAction($m_district_id){

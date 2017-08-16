@@ -325,7 +325,7 @@
 		var street_list = Array();
 		var category_list = Array();
 		{%for item in categorys%}
-			category_list.push(['{{item.ctg_id}}',"{{item.ctg_name}}",'{{item.m_type_id}}']);
+			category_list.push(['{{item.ctg_id}}',"{{item.ctg_name}}",'{{item.parent_id}}']);
 		{%endfor%}
 
 		{%for item in districts%}
@@ -604,8 +604,8 @@ var map, ele, mapH, mapW, addEle, mapL, mapN, mapZ;
 
 ele = 'maps_mapcanvas';
 addEle = 'maps_address';
-mapLat = 'maps_maplat';
-
+mapLat = 'map_lat';
+var maplng = "map_lng";
 var markers = [];
 var map_lat =21.0197704; 
 var map_lng = 105.8007434;

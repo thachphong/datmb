@@ -7,15 +7,17 @@
             </div>
         </div>
         <div class="row search_bg search_condition">
+        <form action="{{url.get('tim')}}" method="GET">
+            <input type="hidden" name="type" id="mtype" value="1">
             <div class="row search_row">
                 <div class="col-md-12 col-sm-12 col-xs-12 no_padding" >
-                    <input type="text" name="" placeholder="Nhập địa điểm" class="col-md-12">
+                    <input type="text" name="addr" placeholder="Nhập địa điểm" class="col-md-12">
                 </div>
             </div>            
             <div class="row search_row" >
                 <div class="col-md-2 col-sm-2 col-xs-12 no_padding"> 
                     <label class="select_icon">                  
-                        <select name="ctg_id" id="ctg_id">
+                        <select name="ctgid" id="ctg_id">
                             <option>Loại bất động sản</option>
                             <option>Nhà cho thuê</option>
                             <option>Căn hộ cho thuê</option>
@@ -26,7 +28,7 @@
                 </div>
                 <div class="col-md-2 col-sm-2 col-xs-12 no_padding">
                     <label class="select_icon">  
-                        <select name="m_provin_id">
+                        <select name="provin" id="s_m_provin_id">
                             <option value="">Tỉnh/Thành phố</option>
                             {%for item in provincials%}
                                 <option value="{{item.m_provin_id}}" >{{item.m_provin_name}}</option>
@@ -36,15 +38,15 @@
                 </div>
                 <div class="col-md-2 col-sm-2 col-xs-12 no_padding">
                     <label class="select_icon">
-                        <select name="m_district_id">
-                            <option>Quận/Huyện</option>
+                        <select name="district" id="s_m_district_id">
+                            <option value="">Quận/Huyện</option>
                         </select>
                     </label>
                 </div>
                 <div class="col-md-2 col-sm-2 col-xs-12 no_padding">
                     <label class="select_icon">  
-                        <select name="m_ward_id">
-                            <option>Phường/Xã</option>
+                        <select name="ward" id="s_m_ward_id">
+                            <option value="">Phường/Xã</option>
                         </select>
                     </label>
                 </div>
@@ -68,9 +70,9 @@
                 </div>
                 <div class="col-md-2 col-sm-2 col-xs-12 no_padding">
                     <label class="select_icon">  
-                        <select name="price">
+                        <select name="price" id="price">
                             <option value="">Mức giá</option>
-                            <option value="0">Thỏa thuận</option> 
+                            <!-- <option value="0">Thỏa thuận</option> 
                             <option value="1">&lt; 500 triệu</option> 
                             <option value="2">500 - 800 triệu</option> 
                             <option value="3">800 - 1 tỷ</option> 
@@ -81,7 +83,7 @@
                             <option value="8">7 - 10 tỷ</option> 
                             <option value="9">10 - 20 tỷ</option> 
                             <option value="10">20 - 30 tỷ</option> 
-                            <option value="11">&gt; 30 tỷ</option>
+                            <option value="11">&gt; 30 tỷ</option> -->
                         </select>
                     </label>
                 </div>
@@ -89,14 +91,14 @@
             <div class="row search_row">
                 <div class="col-md-2 col-sm-2 col-xs-12 no_padding">
                     <label class="select_icon">  
-                        <select name="m_street_id">
+                        <select name="street">
                             <option value="">Đường phố</option>
                         </select>
                     </label>
                 </div>
                 <div class="col-md-2 col-sm-2 col-xs-12 no_padding">
                     <label class="select_icon">  
-                        <select name="room_num">
+                        <select name="roomnum">
                             <option value="">Số phòng ngủ</option>
                             <option value="0">Không xác đinh</option>
                             <option value="1">1+</option>
@@ -109,7 +111,7 @@
                 </div>
                 <div class="col-md-2 col-sm-2 col-xs-12 no_padding">
                     <label class="select_icon">  
-                        <select name="m_directional_id">
+                        <select name="directional">
                             <option value="">Hướng nhà</option>
                             {%for item in directionals%}
                                 <option value="{{item.m_directional_id}}" >{{item.m_directional_name}}</option>
@@ -119,8 +121,8 @@
                 </div>
                 <div class="col-md-2 col-sm-2 col-xs-12 no_padding">
                     <label class="select_icon">  
-                        <select>
-                            <option>Dự án</option>
+                        <select name="project">
+                            <option value="">Dự án</option>
                         </select>
                     </label>
                 </div>
@@ -128,11 +130,11 @@
                     <button class="btn_search"><span class="fa fa-search"></span><span style="margin-left:5px;">TÌM KIẾM</span></button>
                 </div>
                 
-            </div>            
+            </div>
+            </form>            
         </div>
     </div>
 </div>
-{{ partial('includes/pho_ajax') }}
 <script type="text/javascript">
 $(document).ready(function() {
     $(document).off('click','.tab_title');
@@ -140,8 +142,13 @@ $(document).ready(function() {
         $('.tab_title').removeClass('active');
         $(this).addClass('active');
         change_m_type_id($(this).attr('data'));
+        $('#mtype').val($(this).attr('data'));
     });
     var category_list = Array();
+    var sprices = Array();
+    {%for item in sprices%}
+        sprices.push(['{{item.s_price_id}}',"{{item.s_price_name}}",'{{item.m_type_id}}']);
+    {%endfor%}
     {%for item in categorys%}
         category_list.push(['{{item.ctg_id}}',"{{item.ctg_name}}",'{{item.parent_id}}']);
     {%endfor%}
@@ -155,7 +162,77 @@ $(document).ready(function() {
         });
         $('#ctg_id').empty();
         $('#ctg_id').append(option);
+        var op_price = '<option value="">Mức giá</option>';
+        $.each(sprices,function(key,item){            
+            if(val == item[2]){                    
+                op_price +='<option value="'+item[0]+'">'+item[1]+'</option>';                                     
+            }
+        });
+        $('#price').empty();
+        $('#price').append(op_price);
     }
     change_m_type_id(1);
+    var district_list = null;
+    var ward_list = null;
+    function get_district(){
+        jsion_ajax("{{url.get('index/district')}}" ,null,function(datas){               
+            district_list = datas.m_districts;  
+            ward_list    =  datas.m_wards;  
+        });
+    }
+    setTimeout(get_district(),1000);
+    $(document).off('change','#s_m_provin_id');
+    $(document).on('change','#s_m_provin_id',function(){
+        var val = $(this).val().trim();
+        var option='<option value="">Quận/Huyện</option>';
+        if(val !=''){
+            var list=district_list;
+            for(i=0;i<list.length;i++){
+                if(list[i]['m_provin_id'] == val){
+                    option +='<option value="'+list[i]['m_district_id']+'">'+list[i]['m_district_name']+'</option>'; 
+                }                        
+            }
+            $('#s_m_district_id').empty();
+            $('#s_m_district_id').append(option);
+                               
+           // });
+        }else{
+            $('#s_m_district_id').empty();
+            $('#s_m_district_id').append(option);
+        }        
+        
+    });  
+    $(document).off('change','#s_m_district_id');
+    $(document).on('change','#s_m_district_id',function(){
+        var val = $(this).val().trim();
+        var option='<option value="">Phường/Xã</option>';
+        if(val !=''){
+            var list=ward_list;                    
+            for(i=0;i<list.length;i++){
+                if(list[i]['m_district_id'] == val){
+                    option +='<option value="'+list[i]['m_ward_id']+'">'+list[i]['m_ward_name']+'</option>'; 
+                }                        
+            }                  
+        }
+        $('#s_m_ward_id').empty();
+        $('#s_m_ward_id').append(option);        
+        
+    });  
+
+    s_m_ward_id
 });
+function jsion_ajax(url,data,done_fun){
+    $.ajax({
+        url: url,
+        data: data,
+        dataType: 'json',
+        success: function(datajsion) {
+            done_fun(datajsion);
+        },
+        error: function() {
+            alert('Lỗi Ajax !!!');
+        },      
+        type: 'POST'
+    });
+}
 </script>
