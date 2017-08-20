@@ -1,4 +1,3 @@
-{{ partial('includes/search') }}
 <div class="row">
    <div class="container" id="content">            
       <div class="col-md-8 col-sm-12 col-xs-12 margin_top">
@@ -49,6 +48,6 @@
          {%endif%}
             
       </div>
-      {{ partial('includes/right') }}
+      {{ partial('includes/right2') }}
    </div>
 </div>

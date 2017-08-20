@@ -5,6 +5,7 @@ use Phalcon\Mvc\Model\Validator\Email as EmailValidator;
 use Phalcon\Mvc\Model\Validator\Uniqueness as UniquenessValidator;
 use Multiple\Models\DBModel;
 use Multiple\PHOClass\PhoLog;
+use Multiple\PHOClass\PHOArray;
 class Users extends DBModel
 {    
     public $user_id;
@@ -22,6 +23,8 @@ class Users extends DBModel
     public $email;
     public $sex;
     public $avata;
+    public $facebook;
+    public $skype;
     //public $avata;
     public function initialize()
     {
@@ -49,8 +52,8 @@ class Users extends DBModel
        // PhoLog::debug_var('---test---',$user_no);  
         //PhoLog::debug_var('---test---',$this->encodepass($pass)); 
         $usr = Users::findFirst(array(
-                "email = :email: and user_id= :user_id:  ",
-                'bind' => array('email' => $email,'user_id'=>$id)
+            "email = :email: and user_id= :user_id:  ",
+            'bind' => array('email' => $email,'user_id'=>$id)
         ));
         if($usr != false){
             $usr->status = 1;
@@ -106,5 +109,53 @@ class Users extends DBModel
             return $res;
         }
     }
-    
+    public function updatepass($user_id,$pass_old,$pass_new){
+		$sql="update user set pass=:pass_new where user_id =:user_id and pass =:pass_old";
+		return $this->pho_execute($sql,array('user_id'=>$user_id,'pass_new'=>$this->encodepass($pass_new),'pass_old'=>$this->encodepass($pass_old)));
+	}
+	public function updateinfo($param){
+		$sql_pa = PHOArray::filter($param, array(
+                    'user_name'
+                    ,'mobile' 
+                    ,'address'                               
+                    ,'sex'
+                    ,'facebook'
+                    ,'skype'
+                    ,'user_id'
+                   ));
+        
+		$sql ="update user set user_name= :user_name
+						,mobile= :mobile
+						,address= :address
+						,sex= :sex
+						,facebook= :facebook
+						,skype= :skype				
+						";
+		if(strlen($param['avata']) >0){
+			$sql .=" ,avata= :avata";
+			$sql_pa['avata']= $param['avata'];
+		}
+		$sql .=" where user_id =:user_id";
+		return $this->pho_execute($sql,$sql_pa);
+	}
+	public function get_user_rows($param)
+	{
+		$sql = "SELECT	* FROM	user ";
+		
+		if (isset($param['s_user_name'])) {
+			$sql_param = array(
+					'user_name' =>  '%' .$param['s_user_name'] . '%'
+				);
+			$sql .= " WHERE lower(usr.user_name) like lower(:user_name) ";
+		} else {
+			$sql_param = array();
+		}
+		
+		$sql .= "
+			ORDER BY
+				user_id
+		";
+		//var_dump($sql);die;
+		return $this->pho_query($sql, $sql_param);
+	}
 }

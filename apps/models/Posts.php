@@ -195,7 +195,7 @@ class Posts extends DBModel
 				where p.del_flg = 0
 				$where
 				order by p.post_id DESC
-				limit 10";
+				limit $limit";
 		return $this->pho_query($sql);
 	}
 	public function get_post_byctgno($ctg_no,$start_row=0){
@@ -492,5 +492,136 @@ class Posts extends DBModel
 				";
 		$res = $this->query_first($sql,$param);
 		return $res['cnt'];
+	}
+	public function get_list_byuser($user_id){
+		$sql = "select p.post_id,p.post_name,p.post_no,p.price,p.acreage,pro.m_provin_name,dis.m_district_name,
+				NULLIF(un.m_unit_name,'') m_unit_name,
+				NULLIF(im.img_path,'') img_path,
+				DATE_FORMAT(v.start_date ,'%d/%m/%Y')  start_date,
+				DATE_FORMAT(v.end_date ,'%d/%m/%Y')  end_date,p.add_user,
+				(case p.`status` when 0 THEN 'Chờ duyệt' when 1 THEN 'đã duyệt' when 2 THEN 'Không duyệt' when 3 THEN 'Đã xóa' end) status
+				from posts p
+				INNER JOIN m_provincial pro on pro.m_provin_id = p.m_provin_id
+				INNER JOIN m_district dis on dis.m_district_id = p.m_district_id
+				INNER JOIN posts_view v on v.post_id = p.post_id
+				LEFT JOIN posts_img im on im.post_id = p.post_id and im.avata_flg = 1
+				LEFT JOIN m_unit un on un.m_unit_id = p.unit_price 
+
+				where p.del_flg = 0
+				and p.add_user = :user_id
+				ORDER BY p.post_id DESC";
+		return $this->pho_query($sql,array('user_id'=>$user_id));
+	}	
+	public function _delete($id){
+		$sql="update posts set del_flg = 1 where post_id = :post_id";
+		return $this->pho_execute($sql,array('post_id'=>$id));
+	}
+	public function get_list_all($param,$start_row=0){
+		$limit = 50;
+		$del_flg = 0;
+		if(strlen($param['limit']) > 0){
+			$limit = $param['limit'];
+		}
+		if(strlen($param['del_flg']) > 0){
+			$del_flg = $param['del_flg'];
+		}
+		$pasql = array();	
+		$sql = "select p.post_id,p.post_name,p.post_no,p.price,p.acreage,
+			 c.ctg_name,		
+				DATE_FORMAT(v.start_date ,'%d/%m/%Y')  start_date,
+				DATE_FORMAT(v.end_date ,'%d/%m/%Y')  end_date,p.add_user,
+				(case p.status when 0 THEN 'Chờ duyệt' when 1 THEN 'đã duyệt' when 2 THEN 'Không duyệt' when 3 THEN 'Đã xóa' end) status_name,p.status
+				from posts p
+				LEFT JOIN category c on c.ctg_id = p.ctg_id
+				INNER JOIN posts_view v on v.post_id = p.post_id
+
+				where p.del_flg = $del_flg	";
+		if(strlen($param['status']) > 0){
+			$sql .=" and p.status = :status";	
+			$pasql['status'] = $param['status'];		
+		}
+		$pasql['fdate'] ='00/00/0000';        
+        if (isset($param['fdate']) && empty($param['fdate'])==FALSE) {
+			$pasql['fdate'] = $param['fdate'];
+		}
+        if (isset($param['tdate']) && empty($param['tdate'])==FALSE) {
+			$pasql['tdate'] = $param['tdate'].' 23:59';
+            $sql .= " and v.start_date between STR_TO_DATE(:fdate,'%d/%m/%Y') and STR_TO_DATE(:tdate,'%d/%m/%Y %H:%i')";
+		}else{
+            $sql .= " and v.start_date between STR_TO_DATE(:fdate,'%d/%m/%Y %H:%i') and SYSDATE()";
+        }
+        if(strlen($param['ctgid']) > 0){
+			$sql .=" and p.ctg_id in (
+					select ctg_id from category 
+					where del_flg =0
+					and ctg_id = :ctg_id
+					union all
+					select ctg_id from category 
+					where parent_id = :ctg_id
+					)	";
+			$pasql['ctg_id'] = $param['ctgid'];
+		}
+		if(strlen($param['pid']) > 0){
+			$sql .=" and p.post_id = :post_id";	
+			$pasql['post_id'] = $param['pid'];
+		}
+		$sql .=	"		
+				ORDER BY p.post_id DESC
+				limit $limit
+				OFFSET $start_row";
+		return $this->pho_query($sql,$pasql);
+	}
+	public function get_list_all_count($param){
+		$limit = 50;
+		$del_flg = 0;
+		if(strlen($param['limit']) > 0){
+			$limit = $param['limit'];
+		}
+		if(strlen($param['del_flg']) > 0){
+			$del_flg = $param['del_flg'];
+		}
+		$pasql = array();	
+		$sql = "select count(p.post_id) cnt
+				from posts p
+				LEFT JOIN category c on c.ctg_id = p.ctg_id
+				INNER JOIN posts_view v on v.post_id = p.post_id
+
+				where p.del_flg = $del_flg	";
+		if(strlen($param['status']) > 0){
+			$sql .=" and p.status = :status";	
+			$pasql['status'] = $param['status'];		
+		}
+		$pasql['fdate'] ='00/00/0000';        
+        if (isset($param['fdate']) && empty($param['fdate'])==FALSE) {
+			$pasql['fdate'] = $param['fdate'];
+		}
+        if (isset($param['tdate']) && empty($param['tdate'])==FALSE) {
+			$pasql['tdate'] = $param['tdate'].' 23:59';
+            $sql .= " and v.start_date between STR_TO_DATE(:fdate,'%d/%m/%Y') and STR_TO_DATE(:tdate,'%d/%m/%Y %H:%i')";
+		}else{
+            $sql .= " and v.start_date between STR_TO_DATE(:fdate,'%d/%m/%Y %H:%i') and SYSDATE()";
+        }
+        if(strlen($param['ctgid']) > 0){
+			$sql .=" and p.ctg_id in (
+					select ctg_id from category 
+					where del_flg =0
+					and ctg_id = :ctg_id
+					union all
+					select ctg_id from category 
+					where parent_id = :ctg_id
+					)	";
+			$pasql['ctg_id'] = $param['ctgid'];
+		}
+		if(strlen($param['pid']) > 0){
+			$sql .=" and p.post_id = :post_id";	
+			$pasql['post_id'] = $param['pid'];
+		}
+		
+		$res = $this->query_first($sql,$pasql);
+		return $res['cnt'];
+	}
+	public function update_status($post_id,$status){
+		$sql="update posts set status =:status where post_id = :post_id";
+		return $this->pho_execute($sql,array('status'=>$status,'post_id'=>$post_id));
 	}
 }

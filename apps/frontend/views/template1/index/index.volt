@@ -125,8 +125,39 @@
                   </div>
                </div>
             </div>
-         </div>    
+         </div> 
+         <div class="row margin_top" >
+         	<!--<marquee id="marq" scrollamount="3" direction="left" loop="50" scrolldelay="0" behavior="slide" onmouseover="this.stop()" onmouseout="this.start()">
+         		{%for item in slides%}
+         		<a href="{{item.link_page}}"><img src="{{url.get(item.img_path)}}" style="width: 200px;height:120px"></a>
+         		{%endfor%}
+         	</marquee>-->
+         	<div class="imgscroll">
+	         	<ul id="imgs" >
+				    {%for item in slides%}
+	         		<li><a href="{{item.link_page}}"><img src="{{url.get(item.img_path)}}" style="width: 200px;height:120px"></a></li>
+	         		{%endfor%}
+	  			</ul>
+  			</div>
+         </div>   
       </div>
+      
+      {{ javascript_include('template1/js/ImageScroll.js') }}
+      <script type="text/javascript">
+
+	  $('#imgs').imageScroll({
+	    orientation:"left",
+	    speed:1000,
+	    interval:1000,
+	    hoverPause:true,
+	    callback:function(){
+	      var ordinal = $(this).find("img").first().attr("src");
+	      <!-- console.log(ordinal); -->
+	      $(this).next("span").text("CallbackDisplay: hidden "+ordinal+"!");
+	    }
+	  });
+
+	  </script>
       {{ partial('includes/right') }}
    </div>
 </div>

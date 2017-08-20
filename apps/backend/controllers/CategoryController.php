@@ -102,7 +102,7 @@ class CategoryController extends PHOController
 			if(strlen($param['ctg_id'])==0){
 				$ctg_id = $db->_insert($param);
 			}else{
-				PhoLog::debug_var('---d---',$param);
+				//PhoLog::debug_var('---d---',$param);
 				$db->_update($param);
 			}
 		}else{

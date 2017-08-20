@@ -38,11 +38,11 @@
                         <li><a href="{{url.get('menu/list/3')}}">Memu cấp 3</a></li>                       
                       </ul> 
                   </li>                  
-                  <li><a ><i class="fa fa-cube"></i>Danh mục - Sản Phẩm <span class="fa fa-chevron-down"></span></a>
+                  <li><a ><i class="fa fa-cube"></i>Danh mục - Tin rao <span class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">
                       <li><a href="{{url.get('category/list/1/0')}}">Danh mục cấp 1</a></li>
                       <li><a href="{{url.get('category/list/2/0')}}">Danh mục cấp 2</a></li>
-                      <li><a href="{{url.get('product')}}">Sản phẩm</a></li>                      
+                      <li><a href="{{url.get('product')}}">Tin rao</a></li>                      
                     </ul>
                   </li>
                   <li><a href="{{url.get('page')}}"><i class="fa fa-file-powerpoint-o"></i> Trang <span class="fa"></span></a></li>
@@ -55,11 +55,11 @@
                   </li>
                   <li><a><i class="fa fa-sliders"></i> Slide - Banner <span class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">
-                      <li><a href="{{url.get('slides/list/0')}}">Slide</a></li>
-                      <li><a href="{{url.get('slides/list/1')}}">Banner</a></li>
+                      <li><a href="{{url.get('slide/list/0')}}">Slide</a></li>
+                      <li><a href="{{url.get('slide/list/1')}}">Banner</a></li>
                     </ul>
                   </li>
-                  <li><a href="<%$smarty.const.ACW_BASE_URL%>user"><i class="fa fa-group"></i> Tài khoản <span class="fa"></span></a></li>                  
+                  <li><a href="{{url.get('useradm/list')}}"><i class="fa fa-group"></i> Tài khoản <span class="fa"></span></a></li>                  
                   <li><a><i class="fa fa-gear"></i> Cài đặt <span class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">
                       <li><a href="{{url.get('define/list/1')}}">Thông tin công ty</a></li>                      

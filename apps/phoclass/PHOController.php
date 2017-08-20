@@ -8,16 +8,6 @@ use Phalcon\Cache\Frontend\Data as FrontData;
 use Phalcon\Cache\Backend\Memory;
 
 
-// Cache data
-// $frontCache = new FrontData();
-
-// $cache = new Memory($frontCache);
-
-// // Cache arbitrary data
-// $cache->save("my-data", [1, 2, 3, 4, 5]);
-
-// // Get data
-// $data = $cache->get("my-data");
 class PHOController extends Controller
 {
 	protected function get_param($arr_pa)

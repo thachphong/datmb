@@ -2,10 +2,10 @@
 
 namespace Multiple\Backend\Controllers;
 
-use Phalcon\Mvc\Controller;
+use Multiple\PHOClass\PHOController;
 use Multiple\Models\Users;
 
-class UserAdmController extends Controller
+class UserAdmController extends PHOController
 {
 
 	public function indexAction()
@@ -83,4 +83,11 @@ class UserAdmController extends Controller
             'name' => $user->username
         ));
     }
+    public function listAction(){
+    	$model = new Users();
+		$result['list'] = $model->get_user_rows($param);
+    	
+		$this->set_template_share();
+		return $this->ViewVAR($result);
+	}
 }

@@ -34,7 +34,7 @@
 						      </tr>
 						      <tr>
 						        <td>Link xem tin</td>
-						        <td><a href="{{url.get('')}}{{post['post_no']}}" target="_blank">{{url.get('')}}{{post['post_no']}}</a></td>						        
+						        <td><a href="{{url.get('b/')}}{{post['post_no']}}_{{post['post_name']}}" target="_blank">{{url.get('b/')}}{{post['post_no']}}_{{post['post_name']}}</a></td>						        
 						      </tr>
 						    </tbody>
 						</table>

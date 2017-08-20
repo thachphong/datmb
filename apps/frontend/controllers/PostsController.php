@@ -188,14 +188,14 @@ class PostsController extends PHOController
 		if($file->FolderExists($dest_folder) == false){
 			$file->CreateFolder($dest_folder);
 		}
-		PhoLog::debug_Var('---rrrr--',$listfile);
+		//PhoLog::debug_Var('---rrrr--',$listfile);
 		foreach ($listfile as $key => $value){
 			$exp = explode('/', $value);
 			$desti_file = 'images/posts/'.$year.'/'.$month.'/'.$day.'/'.$post_id.'/'.$exp[count($exp)-1];
 			$src_file = str_replace(BASE_URL_NAME, '', $value);
 			$file->CopyFile(PHO_PUBLIC_PATH.$src_file,PHO_PUBLIC_PATH.$desti_file);
-			PhoLog::debug_Var('---rrrr--','from:'.PHO_PUBLIC_PATH.$src_file);	
-			PhoLog::debug_Var('---rrrr--','to:'.PHO_PUBLIC_PATH.$desti_file);	
+			//PhoLog::debug_Var('---rrrr--','from:'.PHO_PUBLIC_PATH.$src_file);	
+			//PhoLog::debug_Var('---rrrr--','to:'.PHO_PUBLIC_PATH.$desti_file);	
 			$file->DeleteFile(PHO_PUBLIC_PATH.$value);
 			$result[] = $desti_file;			
 		}
@@ -259,6 +259,18 @@ class PostsController extends PHOController
 		}
 		
 		return $this->ViewJSON($result);
+	}
+	public function listAction(){
+		$db = new Posts();
+		$user = $this->session->get('auth');
+		$result['list']=$db->get_list_byuser($user->user_id);
+		$this->set_template_share();
+		$this->ViewVAR($result);	
+	}
+	public function deleteAction($id){
+		$db = new Posts();
+		$db->_delete($id);
+		$this->_redirect('tin-da-dang');
 	}
 	
 }

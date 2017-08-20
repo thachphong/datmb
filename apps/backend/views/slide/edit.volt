@@ -1,9 +1,9 @@
-<div class="row modal-box" style="width:700px">
+<div class="row" style="width: 700px">
               <div class="col-md-12 col-sm-12 col-xs-12">
-                <div class="x_panel">
+                <!--<div class="x_panel">
                   <div class="x_title">
-                    <h2>Form Design</h2>
-                    <ul class="nav navbar-right panel_toolbox">
+                    <h2>Danh mục</h2>
+                    <ul class="nav navbar-right panel_toolbox">-->
                       <!--<li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
                       </li>
                       <li class="dropdown">
@@ -15,65 +15,50 @@
                           </li>
                         </ul>
                       </li>-->
-                      <li style="float: right"><a class="dialog_close" ><i class="fa fa-close"></i></a>
+                      <!--<li style="float: right"><a class="dialog_close" ><i class="fa fa-close"></i></a>
                       </li>
                     </ul>
                     <div class="clearfix"></div>
-                  </div>
+                  </div>-->
                   <div class="x_content">
                     <br />
-                    <form id="demo-form2" data-parsley-validate class="form-horizontal form-label-left">
-
+                    <form id="form_ctg" action="" class="form-horizontal form-label-left" enctype="multipart/form-data">
                       <div class="form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">Slide type <span class="required">*</span>
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="ctg_name">Hình ảnh<span class="required">*</span>
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                          <input type="text" id="first-name" required="required" class="form-control col-md-7 col-xs-12">
+                          <img id="img_disp" class="img-rounded" width="250" height="130" {%if data.img_path is defined%}src="{{url.get(data.img_path)}}"{%endif%}/>                         
+                        </div>                        
+                        <div class="col-md-1 col-sm-1 col-xs-12">
+                        	<button class="btn btn-primary" type="button" id="btn_upload">Upload</button>
+                        	<input  type="file" id="upload_file" style="display: none"/>
+                        	
                         </div>
+                        <input type="hidden" id="img_path" required="required" name="img_path" class="form-control col-md-7 col-xs-12" value="{{data.img_path}}">
+                        <input type="hidden"  name="slide_id" value="{{data.slide_id}}" >  
+                        <input type="hidden"  name="banner_flg" value="{{data.banner_flg}}" >
+                        <input type="hidden"  name="folder_tmp" value="{{folder_tmp}}" >
                       </div>
                       <div class="form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">File <span class="required">*</span>
-                        </label>
-                        <div class="col-md-6 col-sm-6 col-xs-12">
-                          <!--<input type="text" id="last-name" name="last-name" required="required" class="form-control col-md-7 col-xs-12">-->
-                          <button class="btn btn-info" onclick="upload_file()"><span>Chọn Ảnh ...</button><span id="lb_file"></span>
-                          <input type="file" id="imgInp"  name="src_image" style="display: none" onchange="readURL(this)">
-                          <img src="" id="img_disp"  />
-                          <!--<input class="btn btn-info" type="file" id="imgInp" title="Chọn Ảnh ..." name="src_image">--> 
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Link đến trang</label>
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                          <input type="text"  class="form-control" name="link_page" value="{{data.link_page}}">
                         </div>
-                      </div>
+                      </div> 
                       <div class="form-group">
-                        <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Middle Name / Initial</label>
-                        <div class="col-md-6 col-sm-6 col-xs-12">
-                          <input id="middle-name" class="form-control col-md-7 col-xs-12" type="text" name="middle-name">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Hiện/Ẩn</label>
+                        <div class="col-md-3 col-sm-3 col-xs-12">
+                          <select class="form-control" name="del_flg">
+                          	 <option value="0" {%if data.del_flg == 0%}selected="selected"{%endif%}>Hiện</option>
+                          	 <option value="1" {%if data.del_flg == 1%}selected="selected"{%endif%}>Ẩn</option>
+                          </select>                          
                         </div>
-                      </div>
-                      <div class="form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Gender</label>
-                        <div class="col-md-6 col-sm-6 col-xs-12">
-                          <div id="gender" class="btn-group" data-toggle="buttons">
-                            <label class="btn btn-default" data-toggle-class="btn-primary" data-toggle-passive-class="btn-default">
-                              <input type="radio" name="gender" value="male"> &nbsp; Male &nbsp;
-                            </label>
-                            <label class="btn btn-primary" data-toggle-class="btn-primary" data-toggle-passive-class="btn-default">
-                              <input type="radio" name="gender" value="female"> Female
-                            </label>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Date Of Birth <span class="required">*</span>
-                        </label>
-                        <div class="col-md-6 col-sm-6 col-xs-12">
-                          <input id="birthday" class="date-picker form-control col-md-7 col-xs-12" required="required" type="text">
-                        </div>
-                      </div>
+                      </div>                      
                       <div class="ln_solid"></div>
                       <div class="form-group">
-                        <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+                        <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3" style="text-align: center">
                           <button class="dialog_close btn btn-primary" type="button">Thoát</button>
-						  <button class="btn btn-primary" type="reset">Reset</button>
-                          <button type="submit" class="btn btn-success">Submit</button>
+                          <button class="btn btn-success" id="btn_save" type="button">Cập nhật</button>
                         </div>
                       </div>
 
@@ -81,33 +66,45 @@
                   </div>
                 </div>
               </div>
-            </div>
+           <!-- </div>-->
 <script>
-	function upload_file(){
-		$('#imgInp').click();
-	}
-	function readURL(input) {
-            if (input.files && input.files[0]) {
-                var reader = new FileReader();
-
-                reader.onload = function (e) {
-                    $('#img_disp')
-                        .attr('src', e.target.result)
-                        .width(150)
-                        .height(200);
-                    //$('#lb_file').text(e.target.result);
-                };
-
-                reader.readAsDataURL(input.files[0]);
-            }
-    }
-	/*$(document).ready(function() {		
-        $(document).off('change','#imgInp'); 
-        $(document).on('change','#imgInp',function(event){
-        	var corractpath = $(this).val();
-        	var filename = corractpath.replace(/^.*[\\\/]/, '')
-        	$('#lb_file').text(filename);
-        	$('#img_disp').attr('src',corractpath);
+	
+	
+	$(document).ready(function() {
+		
+		
+		$(document).off('change','#page_flg'); 
+        $(document).on('change','#page_flg',function(event){
+        	var val = $(this).val();
+        	//change_option(val);
         });
-    });*/
+        $(document).off('click','#btn_upload'); 
+        $(document).on('click','#btn_upload',function(event){
+        	$('#upload_file').click();
+        });	
+        $(document).off('change','#upload_file'); 
+        $(document).on('change','#upload_file',function(event){
+        	var corractpath = $(this).val();
+        	//var filename = corractpath.replace(/^.*[\\\/]/, '')        	
+        	
+        	var file_data=$(this).prop("files")[0];
+        	//console.log(file_data);	
+        	var form_data=new FormData(this);
+            form_data.append("file",file_data);
+            var base_url= "{{url.get('')}}";
+            //console.log(form_data);	
+        	Pho_upload("{{url.get('phofile/upload/')}}{{folder_tmp}}" ,form_data,function(datas){
+				//if(datas.status =="OK"){
+					 //console.log(datas);
+				var file_name = datas.link.replace(base_url,"");	
+				$('#img_path').val(file_name);	
+				$('#img_disp').attr('src',datas.link);			
+				//}else{
+					//Pho_message_box_error("Lỗi",datas.msg);
+				//}
+                
+            });
+        });
+	});
+	
 </script>

@@ -12,10 +12,10 @@
 	    <div class="row pn_background pn_border margin_top">
 	    <ul>
 	    <li><a href="{{url.get('thanh-vien')}}"><i class="fa-angle-double-right"></i>Thông báo</a></li>
-	        <li><a href="{{url.get('huong-dan-dang-ky-tai-khoan')}}"><i class="fa-angle-double-right"></i><span>Thay đổi thông tin cá nhân</span></a></li>
-	        <li><a href="{{url.get('huong-dan-quan-ly-tin-rao')}}"><i class="fa-angle-double-right"></i>Thay đổi mật khẩu</a></li>
+	        <li><a href="{{url.get('thanh-vien/thongtin')}}"><i class="fa-angle-double-right"></i><span>Thay đổi thông tin cá nhân</span></a></li>
+	        <li><a href="{{url.get('thanh-vien/pass')}}"><i class="fa-angle-double-right"></i>Thay đổi mật khẩu</a></li>
 	        <li><a href="{{url.get('dang-tin')}}"><i class="fa-angle-double-right"></i>Đăng tin</a></li>
-	        <li><a href="{{url.get('huong-dan-nap-tien')}}"><i class="fa-angle-double-right"></i>Quản lý tin đã đăng</a></li>
+	        <li><a href="{{url.get('tin-da-dang')}}"><i class="fa-angle-double-right"></i>Quản lý tin đã đăng</a></li>
 	    </ul>
 	    </div>
     </div>

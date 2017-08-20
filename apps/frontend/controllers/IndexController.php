@@ -13,7 +13,7 @@ use Multiple\Models\Directional;
 use Multiple\Models\Unit;
 use Multiple\Models\Sprice;
 use Multiple\Models\Category;
-
+use Multiple\Models\Slide;
 class IndexController extends PHOController
 {
 
@@ -32,7 +32,8 @@ class IndexController extends PHOController
 			$param['noingoaithat'] = $ne->get_news_rows(66,6); // noi ngoai that
 			$param['phongthuy'] = $ne->get_news_rows(68,4); // phong thuy
 			$param['tuvanluat'] = $ne->get_news_rows(69,4); // tu van luat
-			
+			$sl = new Slide();
+			$param['slides'] = $sl->get_slides_list(0);
 			//$frontendCache->save( $param);
 			$cache2 = $this->createCache( ['lifetime' => 900 ]); // 1 ngay
 			$cacheKey2 = 'seachtopparam1.cache';
@@ -74,6 +75,33 @@ class IndexController extends PHOController
 	
 		return $this->ViewJSON($data);
 	}
+	public function sbasicAction(){		
+		$ckey ="seach_basic.cache";
+		$cache = $this->createCache(['lifetime' => 86400 ]); // 1 ngay
+		$data = $cache->get($ckey);
+		if($data === null){			
+			$db = new District();
+			$data['m_districts'] = $db->get_rows();
+			$data['m_provins'] = Provincial::get_all();			
+			$data['categorys'] = Category::get_all();
+			$data['sprices'] = Sprice::find();				
+			$cache->save($ckey,$data);
+		}		
+		return $this->ViewJSON($data);
+	}
+	public function sadvanceAction(){		
+		$ckey ="seach_advance.cache";
+		$cache = $this->createCache(['lifetime' => 86400 ]); // 1 ngay
+		$data = $cache->get($ckey);
+		if($data === null){			
+			$mw = new Ward();
+			$data['directionals'] = Directional::find();
+			$data['m_wards'] = $mw->get_rows();
+			$cache->save($ckey,$data);
+		}		
+		return $this->ViewJSON($data);
+	}
+	
 	public function wardAction($m_district_id){
 		$db = new Provincial();
 		$data['list'] =$db->get_byparent($m_district_id);

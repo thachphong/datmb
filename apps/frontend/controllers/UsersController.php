@@ -7,12 +7,11 @@ use Multiple\Models\Users;
 use Multiple\Models\Define;
 use Multiple\Library\Mail;
 use Multiple\PHOClass\PhoLog;
+use Multiple\Library\FilePHP;
 class UsersController extends PHOController
 {
-
 	public function indexAction()
-	{
-		
+	{		
 	}
 	public function registerAction(){
 		$this->set_template_share();
@@ -27,8 +26,7 @@ class UsersController extends PHOController
 			$res['active_msg'] = 'Kích hoạt tài khoản thành công !';
 		}else{
 			$res['active_msg'] = 'Link kích hoạt tài khoản không đúng !';
-		}
-		
+		}		
 		$this->set_template_share();
 		$this->ViewVAR($res);
 	}
@@ -43,10 +41,9 @@ class UsersController extends PHOController
         $result['msg']='';        
         if ($this->request->isPost()) {
         	$param = $this->get_param(array('email','password'));
-        	PhoLog::debug_var('---test---',$param);  
+        	//PhoLog::debug_var('---test---',$param);  
             $db = new Users();
-            $user = $db->get_user($param['email'], $param['password']);
-                   
+            $user = $db->get_user($param['email'], $param['password']);                   
             $result['msg'] = 'Tên đăng nhập hoặc mật khẩu không đúng !';
             if ($user != false) {
             	if($user->status== 1){
@@ -118,5 +115,44 @@ class UsersController extends PHOController
 			<p>Nếu đường link trên không hoạt động, vui lòng copy đường link đó, rồi paste lên thanh địa chỉ của trình duyệt để link tới trang kích hoạt trên hệ thống. </p>
 			<p>Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi!</p>";
 		return $html;
+	}
+	public function updatepassAction(){
+		$param = $this->get_param(array('pass_old','pass_new'));
+		$result = array('status' => 'OK');
+		$result['status'] = 'OK';	
+		$result['msg'] = 'Cập nhật thành công!';	
+		$user = $this->session->get('auth');	
+		$db = new Users();
+		if($db->get_user($user->user_no,$param['pass_old']) != FALSE){
+			$db->updatepass($user->user_id,$param['pass_old'],$param['pass_new']);			
+		}else{
+			$result['status'] = 'NOT';	
+			$result['msg'] = 'Mật khẩu cũ không đúng!';
+		}
+				
+		return $this->ViewJSON($result);
+	}
+	public function updateinfoAction(){
+		$param = $this->get_param(array('user_name','address','mobile','facebook','skype','sex','avata','folder_tmp'));
+		$result = array('status' => 'OK');
+		$result['status'] = 'OK';	
+		$result['msg'] = 'Cập nhật thành công!';	
+		$user = $this->session->get('auth');	
+		$db = new Users();
+		$param['user_id'] = $user->user_id;
+		if(strlen($param['avata'])>0){
+			$file = new FilePHP();
+			$ext = $file->GetExtensionName($param['avata']);
+			if($user->avata != ''){
+				$file->DeleteFile(PHO_PUBLIC_PATH.'images/users/'.$user->avata);
+			}	
+			$file_name = uniqid('',TRUE).'.'.$ext;	
+			$file->CopyFile(PHO_PUBLIC_PATH.$param['avata'],PHO_PUBLIC_PATH.'images/users/'.$file_name);
+			$file->DeleteFolder(PHO_PUBLIC_PATH.$param['folder_tmp']);
+			$param['avata'] =$file_name;
+		}
+		$db->updateinfo($param);
+		$this->_registerSession($db->get_info($user->user_id));
+		return $this->ViewJSON($result);
 	}
 }
