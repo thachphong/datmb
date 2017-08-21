@@ -33,9 +33,10 @@
                   </li>
                   <li><a ><i class="fa fa-bars"></i> Menu <span class="fa fa-chevron-down"></span></a>
                       <ul class="nav child_menu">
-                        <li><a href="{{url.get('menu/list/1')}}">Memu cấp 1</a></li>
-                        <li><a href="{{url.get('menu/list/2')}}">Memu cấp 2</a></li>
-                        <li><a href="{{url.get('menu/list/3')}}">Memu cấp 3</a></li>                       
+                        <li><a href="{{url.get('menu/list/1/0')}}">Memu chính cấp 1</a></li>
+                        <li><a href="{{url.get('menu/list/2/0')}}">Memu chính cấp 2</a></li>
+                        <li><a href="{{url.get('menu/list/3/0')}}">Memu chính cấp 3</a></li>
+                        <li><a href="{{url.get('menu/list/1/1')}}">Memu phụ</a></li>                       
                       </ul> 
                   </li>                  
                   <li><a ><i class="fa fa-cube"></i>Danh mục - Tin rao <span class="fa fa-chevron-down"></span></a>

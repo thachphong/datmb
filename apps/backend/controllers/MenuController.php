@@ -21,16 +21,17 @@ class MenuController extends PHOController
 		// $param['menus']=$db->get_menu_all(TRUE);
 		// return ACWView::template_admin('menu.html', $param);
 	}
-	public function listAction($level_id)
+	public function listAction($level_id,$position)
 	{
 		$db = new Menu();
 		$param = array( );
-		$param['menus']=$db->get_menu_list($level_id);
+		$param['menus']=$db->get_menu_list_info($level_id,$position);
 		$param['level_flg'] = $level_id;
+		$param['position']=$position;
 		if($level_id > 1){
-			$param['parent_list1']= $db->get_menu_list(1);
+			$param['parent_list1']= $db->get_menu_list(1,$position);
 			if($level_id > 2){
-				$param['parent_list2']= json_encode($db->get_menu_list(2));
+				$param['parent_list2']= json_encode($db->get_menu_list(2,$position));
 			}
 		}
 		$this->set_template_share();
@@ -38,7 +39,7 @@ class MenuController extends PHOController
 	}
 	public function newAction()
 	{
-		$param = $this->get_param(array('menu_level'));
+		$param = $this->get_param(array('menu_level','position'));
 		$ctg = new Category();
 		$pg = new Page();
 		$param['menu_id'] = null;
@@ -81,6 +82,7 @@ class MenuController extends PHOController
 			, 'menu_level'
 			,'page_flg'
 			,'link'
+			,'position'
 			));
 		
 		$result = array('status' => 'OK');

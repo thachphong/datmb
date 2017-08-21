@@ -20,6 +20,7 @@ class Menu extends DBModel
     public $sort;
     public $page_flg;
     public $link;
+    public $position; //0 : top :1 bottom
     public function initialize()
     {
         $this->setSource("menu");
@@ -58,29 +59,49 @@ class Menu extends DBModel
         
         return $this->pho_query($sql);
     }
-    public function get_menu_list($level)
+    public function get_menu_list($level,$position=0)
     {
         return $this->pho_query("select m.menu_id,m.parent_id, m.menu_name,m.menu_level,m.del_flg,m.sort,m1.menu_name menu_name_1, m2.menu_name menu_name_2
                 from menu m
                 LEFT JOIN menu m1 on m1.menu_id = m.parent_id 
                 LEFT JOIN menu m2 on m2.menu_id = m1.parent_id
                 where m.menu_level = $level
+                and m.position = $position
                 ORDER BY m.sort " );
-    }   
-    public function get_menu_head(){
+    } 
+    public function get_menu_list_info($level,$position=0)
+    {
+        return $this->pho_query("select m.menu_id,m.parent_id, m.menu_name,m.menu_level,m.del_flg,m.sort,m1.menu_name menu_name_1, m2.menu_name menu_name_2,
+( case m.page_flg when 1 then 'Trang' when 2 then 'Danh mục' when 3 then 'Tin tức' else '' end) type,
+(case m.page_flg when 1 then p.page_name else c.ctg_name end ) dm_name
+                from menu m
+                LEFT JOIN menu m1 on m1.menu_id = m.parent_id 
+                LEFT JOIN menu m2 on m2.menu_id = m1.parent_id
+								LEFT JOIN category c on c.ctg_no = m.link
+								LEFT JOIN page p on p.page_no = m.link and m.page_flg =1
+                where m.menu_level = $level
+                and m.position = $position
+                ORDER BY m.sort  " );
+    }  
+    public function get_menu_head($position=0){
         $sql = "select t.menu_id,menu_level,parent_id,link,page_flg,menu_name menu_name
                 ,(select count(*) from menu where  parent_id = t.menu_id) child_flg
                 from menu t
                 where del_flg = 0
+                and position = $position
                 ORDER BY sort";
         return $this->pho_query($sql);
     }
     public function get_menus()
     {        
-        $res =  $this->get_menu_head();
+        $res =  $this->get_menu_head(0);
         $menu = array();
         $this->set_child($menu,$res,0);
         return $menu;       
+    }
+    public function get_menus_bottom()
+    {        
+        return  $this->get_menu_head(1);       
     }
     public function set_child(&$menu,&$list,$parent_id){
         foreach($list as $key=>$item){
@@ -154,7 +175,8 @@ class Menu extends DBModel
         $this->menu_level = $param['menu_level'] ;   
         $this->sort     = $param['menu_sort'] ;   
         $this->page_flg = $param['page_flg'] ;   
-        $this->link     = $param['link'] ;   
+        $this->link     = $param['link'] ; 
+        $this->position  =$param['position'];
         return $this->save();
     }
     public function get_menu_info($ctg_id)
@@ -168,6 +190,7 @@ class Menu extends DBModel
                     ,m.menu_level
                     ,m.page_flg
                     ,m.link
+                    ,m.position
                     ,m1.parent_id menu_name_2
                     ,(CASE m.menu_level WHEN  3 THEN   m.parent_id else  0 END)  parent_id_2
                 from menu m

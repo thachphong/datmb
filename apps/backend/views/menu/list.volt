@@ -82,7 +82,9 @@
                               <th >Menu cấp 1</th>
                               <th >Menu cấp 2</th>
                           {%endif%}
-                          <th >Tên menu</th>                                                                      
+                          <th >Tên menu</th>
+                          <th>Loại</th>
+                          <th>Link tới Trang/Danh mục</th>                                                                     
                           <th>Hiện</th>
                           <th>Sửa</th>   
                           <th>Xóa</th>                         
@@ -98,7 +100,9 @@
                               <td>{{item['menu_name_2']}}</td>
                             <td>{{item['menu_name_1']}}</td>
                           {%endif%}     
-                          <td id="name_{{item['menu_id']}}">{{item['menu_name']}}</td>                                            
+                          <td id="name_{{item['menu_id']}}">{{item['menu_name']}}</td> 
+                          <td>{{item['type']}}</td>
+                          <td>{{item['dm_name']}}</td>                                           
                           <td>                            
                             <span class="fa {%if item['del_flg'] == 1%}fa-square-o{%else%}fa-check-square{%endif%}" style="font-size: 16px;"></span>                            
                           </td>
@@ -147,7 +151,7 @@
                             
     $(document).off('click','#btn_new'); 
         $(document).on('click','#btn_new',function(event){
-          Pho_html_ajax('POST',"{{url.get('menu/new')}}" ,{'menu_level':'{{level_flg}}'},function(html){
+          Pho_html_ajax('POST',"{{url.get('menu/new')}}" ,{'menu_level':'{{level_flg}}','position':'{{position}}'},function(html){
                 /*Pho_modal({
                 template:html,
                 closeClick: false,
@@ -171,7 +175,7 @@
         if(datas.status =="OK"){
           Pho_modal_close("modal1");
           //Pho_message_box("Thông báo",datas.msg);
-          Pho_direct("{{url.get('menu/list/')}}{{level_flg}}");
+          Pho_direct("{{url.get('menu/list/')}}{{level_flg}}/{{position}}");
         }else{
           Pho_message_box_error("Lỗi",datas.msg);
         }
@@ -190,7 +194,7 @@
             //Pho_modal_close("modal1");
             //Pho_message_box("Thông báo",datas.msg);
             //location.href="<%$smarty.const.ACW_BASE_URL%>menu";
-            Pho_direct("{{url.get('menu/list/')}}{{level_flg}}");
+            Pho_direct("{{url.get('menu/list/')}}{{level_flg}}/{{position}}");
           }else{
             Pho_message_box_error("Lỗi",datas.msg);
           }

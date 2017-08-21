@@ -1,16 +1,8 @@
 <div class="row background_menu" style="margin-top:20px">
          <div class="container" id="menu_footer">            
             <div class="menu_top">
-               <ul class="dropDownMenu">
-                  <li><a href="{{url.get('')}}">Tin tức</a></li>
-                  <li><a href="{{url.get('')}}">Bất động sản toàn quốc</a></li>
-                  <li><a href="{{url.get('')}}">Thông tin thị trường</a></li>
-                  <li><a href="{{url.get('')}}">Tin tức pháp luật</a></li>
-                  <li><a href="{{url.get('')}}">Chính sách mới</a></li>
-                  <li><a href="{{url.get('')}}">Thông tin quy hoạch</a></li>
-                  <li><a href="{{url.get('')}}">Tin dự án</a></li>
-                  <li><a href="{{url.get('')}}">Tin đầu tư trong nước</a></li>
-                  <li><a href="{{url.get('')}}">Thị trường BĐS thế giới</a></li>
+               <ul class="dropDownMenu">                 
+                  {{ elements.getMenu_bottom() }}
                </ul>
             </div>
          </div>

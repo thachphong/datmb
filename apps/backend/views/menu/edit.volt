@@ -41,10 +41,11 @@
                          
                           <input type="hidden"  name="menu_id" value="{{menu_id}}">
                           <input type="hidden"  name="menu_level" value="{{menu_level}}">
+                          <input type="hidden"  name="position" value="{{position}}">                          
                         </div>
                       </div>
                       <div class="form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Link tới</label>
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Loại</label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
                           <select class="form-control select2" name="page_flg" id="page_flg">
                              <option ></option>
@@ -55,7 +56,7 @@
                         </div>
                       </div>
                       <div class="form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Trag/Danh mục</label>
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Trang/Danh mục</label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
                           <select class="form-control select2" name="link" id="menu_link">                             
                           </select>                          

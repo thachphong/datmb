@@ -182,6 +182,42 @@ class Elements extends Component
 		echo $menu_data;
 
     }
+    public function getMenu_bottom()
+    {
+    	$cacheKey = 'menu_bottom.cache';
+		$menu_data  = $this->dataCache->get($cacheKey);
+		if ($menu_data === null) {
+			$menu_data ='';
+            $db = new Menu();
+		    $list_menu = $db->get_menus_bottom();
+            $url = new Url();
+            $url->setBaseUri(BASE_URL_NAME);            
+	        $base_url = $url->get('');
+            foreach($list_menu as $item){
+                    $href = $base_url;                    
+                    if(strlen($item['link'])>0){                        
+                        if( $item['page_flg']==1){
+                            $href .= 'p/';
+                        }else if( $item['page_flg']==2){
+                            $href .= 'c/';
+                        }else if ($item['page_flg']==3){
+                            $href .= 'dm/';
+                        }
+                        $href .=$item['link'];
+                    }else{
+                        //$href ='#';
+                    }                
+                    $menu_data .='<li><a href="'.$href.'">'.$item['menu_name'].'</a></li>';
+                        
+	        }
+		    // Store it in the cache
+		    $this->dataCache->save($cacheKey, $menu_data);
+		    
+		}
+		echo $menu_data;
+
+    }
+    
     public function getuser(){
         return $this->session->get('auth');
     }	
